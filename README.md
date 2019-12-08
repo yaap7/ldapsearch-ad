@@ -2,6 +2,9 @@
 
 Python3 script to quickly get various information from a domain controller through his LDAP service.
 
+I'm used to launch it as soon as I get valid AD credentials, after [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/).
+
+
 ## Quick RTFM
 
 Basically, if you do not have valid credentials yet, you can only use:
