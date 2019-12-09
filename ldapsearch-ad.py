@@ -516,6 +516,15 @@ class LdapsearchAd:
             log_success('{}'.format(kerberoastable_user))
         
 
+    def print_search_spn(self, search_filter, size_limit=100):
+        """Method to find services registered in the AD."""
+        if not re.search('serviceprincipalname', search_filter, re.IGNORECASE):
+            search_filter = '(servicePrincipalName={}*)'.format(search_filter)
+        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
+        for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
+            log_success('{}'.format(spn_user))
+        
+
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
         print('Default password policy:')
@@ -620,6 +629,7 @@ def main():
     mandatory_arguments['show-user'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['show-user-list'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
+    mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
@@ -705,6 +715,12 @@ def main():
         elif action == 'kerberoast':
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
+            
+
+        # Find registered services
+        elif action == 'search-spn':
+            log_title('Result of "search-spn" command', 3)
+            ldap.print_search_spn(args.search_filter, args.size_limit)
             
 
         # Run all checks
