@@ -506,7 +506,17 @@ class LdapsearchAd:
         search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
         for kerberoastable_user in self.search(search_filter, search_attributes):
             log_success('{}'.format(kerberoastable_user))
-        
+
+
+    def print_search_spn(self, search_filter, size_limit=100):
+        """Method to find services registered in the AD."""
+        if not re.search('serviceprincipalname', search_filter, re.IGNORECASE):
+            search_filter = '(servicePrincipalName={}*)'.format(search_filter)
+        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
+        for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
+            log_success('{}'.format(spn_user))
+
+
     def print_asreqroast(self):
         """Method to get all account that are vulnerable to ASREPRoast."""
         """Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
@@ -515,6 +525,7 @@ class LdapsearchAd:
         for asreqroastuser in self.search(search_filter,search_attributes):
             log_success('{}'.format(asreqroastuser))
     
+
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
         print('Default password policy:')
@@ -619,6 +630,7 @@ def main():
     mandatory_arguments['show-user'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['show-user-list'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
+    mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
@@ -713,6 +725,11 @@ def main():
             ldap.print_asreqroast()
 
 
+        elif action == 'search-spn':
+            log_title('Result of "search-spn" command', 3)
+            ldap.print_search_spn(args.search_filter, args.size_limit)
+
+
         # Run all checks
         elif action == 'all':
             log_title('Server infos', 3)
@@ -725,7 +742,8 @@ def main():
             ldap.print_trusts()
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-            log_title('Result of "AsRepRoast" command',3)
+            log_title('Result of "asreqroast" command',3)
+            ldap.print_asreqroast()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
