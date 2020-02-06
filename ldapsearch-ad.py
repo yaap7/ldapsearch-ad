@@ -532,6 +532,15 @@ class LdapsearchAd:
         search_attributes = ['whenChanged']
         log_success(self.search(search_filter,search_attributes))
 
+
+    def print_search_delegation(self):
+        """Method to retreive account with delegation set"""
+        search_filter = '(userAccountControl:1.2.840.113556.1.4.803:=524288)'
+        search_attributes = ['cn','samaccountname']
+        for accountdelegation in self.search(search_filter,search_attributes):
+            log_success('{}'.format(accountdelegation))
+
+
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
         print('Default password policy:')
@@ -639,6 +648,7 @@ def main():
     mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
     mandatory_arguments['goldenticket'] = ['domain', 'username', 'password']
+    mandatory_arguments['search-delegation'] = ['domain', 'username', 'password']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
@@ -739,6 +749,12 @@ def main():
         elif action == 'goldenticket':
             log_title('Result of "goldenticket" command', 3)
             ldap.print_lastpwchangekrbtgt()
+
+        elif action == 'search-delegation':
+            log_title('Result of "search-delegation" command',3)
+            ldap.print_search_delegation()
+
+
         # Run all checks
         elif action == 'all':
             log_title('Server infos', 3)
@@ -755,6 +771,8 @@ def main():
             ldap.print_asreqroast()
             log_title('Result of "goldenticket" command',3)
             ldap.print_lastpwchangekrbtgt()
+            log_title('Result of "search-delegation" command',3)
+            ldap.print_search_delegation()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
