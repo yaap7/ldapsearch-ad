@@ -8,11 +8,6 @@ import re
 import sys
 
 
-
-
-
-
-
 def c_red(message):
     """Color text for bad configuration."""
     return '\x1b[0;31;40m{}\x1b[0m'.format(message)
@@ -304,9 +299,6 @@ def list_trustAttributes(ta):
     return flags
 
 
-
-
-
 def debug_var(var):
     print('\n===================')
     print('===   Debug var  ===')
@@ -515,16 +507,14 @@ class LdapsearchAd:
         for kerberoastable_user in self.search(search_filter, search_attributes):
             log_success('{}'.format(kerberoastable_user))
         
-
-    def print_search_spn(self, search_filter, size_limit=100):
-        """Method to find services registered in the AD."""
-        if not re.search('serviceprincipalname', search_filter, re.IGNORECASE):
-            search_filter = '(servicePrincipalName={}*)'.format(search_filter)
-        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
-        for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
-            log_success('{}'.format(spn_user))
-        
-
+    def print_asreqroast(self):
+        """Method to get all account that are vulnerable to ASREPRoast."""
+        """Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
+        search_filter = '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304))'
+        search_attributes =  ['cn', 'samaccountname']
+        for asreqroastuser in self.search(search_filter,search_attributes):
+            log_success('{}'.format(asreqroastuser))
+    
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
         print('Default password policy:')
@@ -629,7 +619,7 @@ def main():
     mandatory_arguments['show-user'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['show-user-list'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
-    mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
+    mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
@@ -715,13 +705,13 @@ def main():
         elif action == 'kerberoast':
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-            
 
-        # Find registered services
-        elif action == 'search-spn':
-            log_title('Result of "search-spn" command', 3)
-            ldap.print_search_spn(args.search_filter, args.size_limit)
-            
+
+        # Get ASRepRoast user account
+        elif action == 'asreproast':
+            log_title('Result of "asreproast" command',3)
+            ldap.print_asreqroast()
+
 
         # Run all checks
         elif action == 'all':
@@ -735,7 +725,7 @@ def main():
             ldap.print_trusts()
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-
+            log_title('Result of "AsRepRoast" command',3)
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
