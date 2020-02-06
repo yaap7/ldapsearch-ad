@@ -526,6 +526,12 @@ class LdapsearchAd:
             log_success('{}'.format(asreqroastuser))
     
 
+    def print_lastpwchangekrbtgt(self):
+        """Method to retreive the last time the password for krbtgt was reset."""
+        search_filter = '(cn=krbtgt)'
+        search_attributes = ['whenChanged']
+        log_success(self.search(search_filter,search_attributes))
+
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
         print('Default password policy:')
@@ -632,6 +638,7 @@ def main():
     mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
     mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
+    mandatory_arguments['goldenticket'] = ['domain', 'username', 'password']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
@@ -729,7 +736,9 @@ def main():
             log_title('Result of "search-spn" command', 3)
             ldap.print_search_spn(args.search_filter, args.size_limit)
 
-
+        elif action == 'goldenticket':
+            log_title('Result of "goldenticket" command', 3)
+            ldap.print_lastpwchangekrbtgt()
         # Run all checks
         elif action == 'all':
             log_title('Server infos', 3)
@@ -744,6 +753,8 @@ def main():
             ldap.print_kerberoast()
             log_title('Result of "asreqroast" command',3)
             ldap.print_asreqroast()
+            log_title('Result of "goldenticket" command',3)
+            ldap.print_lastpwchangekrbtgt()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
