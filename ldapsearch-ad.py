@@ -8,11 +8,6 @@ import re
 import sys
 
 
-
-
-
-
-
 def c_red(message):
     """Color text for bad configuration."""
     return '\x1b[0;31;40m{}\x1b[0m'.format(message)
@@ -304,9 +299,6 @@ def list_trustAttributes(ta):
     return flags
 
 
-
-
-
 def debug_var(var):
     print('\n===================')
     print('===   Debug var  ===')
@@ -514,7 +506,7 @@ class LdapsearchAd:
         search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
         for kerberoastable_user in self.search(search_filter, search_attributes):
             log_success('{}'.format(kerberoastable_user))
-        
+
 
     def print_search_spn(self, search_filter, size_limit=100):
         """Method to find services registered in the AD."""
@@ -523,7 +515,31 @@ class LdapsearchAd:
         search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
         for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
             log_success('{}'.format(spn_user))
-        
+
+
+    def print_asreqroast(self):
+        """Method to get all account that are vulnerable to ASREPRoast."""
+        """Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
+        search_filter = '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304))'
+        search_attributes =  ['cn', 'samaccountname']
+        for asreqroastuser in self.search(search_filter,search_attributes):
+            log_success('{}'.format(asreqroastuser))
+    
+
+    def print_lastpwchangekrbtgt(self):
+        """Method to retreive the last time the password for krbtgt was reset."""
+        search_filter = '(cn=krbtgt)'
+        search_attributes = ['whenChanged']
+        log_success(self.search(search_filter,search_attributes))
+
+
+    def print_search_delegation(self):
+        """Method to retreive account with delegation set"""
+        search_filter = '(userAccountControl:1.2.840.113556.1.4.803:=524288)'
+        search_attributes = ['cn','samaccountname']
+        for accountdelegation in self.search(search_filter,search_attributes):
+            log_success('{}'.format(accountdelegation))
+
 
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
@@ -630,6 +646,9 @@ def main():
     mandatory_arguments['show-user-list'] = ['domain', 'username', 'password', 'search_filter']
     mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
     mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
+    mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
+    mandatory_arguments['goldenticket'] = ['domain', 'username', 'password']
+    mandatory_arguments['search-delegation'] = ['domain', 'username', 'password']
     mandatory_arguments['all'] = ['domain', 'username', 'password']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
@@ -715,13 +734,26 @@ def main():
         elif action == 'kerberoast':
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-            
 
-        # Find registered services
+
+        # Get ASRepRoast user account
+        elif action == 'asreproast':
+            log_title('Result of "asreproast" command',3)
+            ldap.print_asreqroast()
+
+
         elif action == 'search-spn':
             log_title('Result of "search-spn" command', 3)
             ldap.print_search_spn(args.search_filter, args.size_limit)
-            
+
+        elif action == 'goldenticket':
+            log_title('Result of "goldenticket" command', 3)
+            ldap.print_lastpwchangekrbtgt()
+
+        elif action == 'search-delegation':
+            log_title('Result of "search-delegation" command',3)
+            ldap.print_search_delegation()
+
 
         # Run all checks
         elif action == 'all':
@@ -735,7 +767,12 @@ def main():
             ldap.print_trusts()
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-
+            log_title('Result of "asreqroast" command',3)
+            ldap.print_asreqroast()
+            log_title('Result of "goldenticket" command',3)
+            ldap.print_lastpwchangekrbtgt()
+            log_title('Result of "search-delegation" command',3)
+            ldap.print_search_delegation()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
