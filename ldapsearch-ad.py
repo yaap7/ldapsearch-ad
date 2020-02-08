@@ -12,26 +12,32 @@ def c_red(message):
     """Color text for bad configuration."""
     return '\x1b[0;31;40m{}\x1b[0m'.format(message)
 
+
 def c_green(message):
     """Color text for good configuration."""
     return '\x1b[0;32;40m{}\x1b[0m'.format(message)
+
 
 def c_orange(message):
     """Color text for weak configuration."""
     return '\x1b[0;33;40m{}\x1b[0m'.format(message)
 
+
 def c_blue(message):
     """Color text for information."""
     return '\x1b[0;34;40m{}\x1b[0m'.format(message)
+
 
 def c_purple(message):
     """Color text for abnormal behavior of the tool itself."""
     return '\x1b[0;35;40m{}\x1b[0m'.format(message)
 
+
 def c_cyan(message):
     """Mostly for general usefull information."""
     return '\x1b[0;36;40m{}\x1b[0m'.format(message)
-    
+
+
 def c_white_on_red(message):
     """Color text for very bad configuration."""
     return '\x1b[1;37;41m{}\x1b[0m'.format(message)
@@ -45,8 +51,10 @@ def log_title(title, level=2):
 def log_error(message):
     logging.error('{} {}'.format(c_red('[-]'), message))
 
+
 def log_info(message):
     logging.info('{} {}'.format(c_blue('[+]'), message))
+
 
 def log_success(message):
     logging.info('{} {}'.format(c_green('[*]'), message))
@@ -57,9 +65,9 @@ def str_human_date(date):
     if isinstance(date, datetime.timedelta):
         nb_sec = int(date.total_seconds())
     # older versions return a negative big number
-    else:   
-        nb_sec = int((- date ) / 10000000)
-    if nb_sec > 60 :
+    else:
+        nb_sec = int((- date) / 10000000)
+    if nb_sec > 60:
         nb_min = int(nb_sec / 60)
         nb_sec = nb_sec % 60
         if nb_min > 60:
@@ -324,9 +332,6 @@ def debug_var(var):
     print('====================')
 
 
-
-
-
 class LdapsearchAd:
 
     hostname = None
@@ -355,7 +360,6 @@ class LdapsearchAd:
         except ldap3.core.exceptions.LDAPBindError as ldapbe:
             self.last_errors.append('Bind Error: {}'.format(ldapbe))
 
-
     def print_info(self):
         log_info('Forest functionality level = {}'.format(str_functionality_level(self.server.info.other['forestFunctionality'][0])))
         log_info('Domain functionality level = {}'.format(str_functionality_level(self.server.info.other['domainFunctionality'][0])))
@@ -364,7 +368,7 @@ class LdapsearchAd:
         log_info('defaultNamingContext = {}'.format(self.server.info.other['defaultNamingContext'][0]))
         log_info('ldapServiceName = {}'.format(self.server.info.other['ldapServiceName'][0]))
         log_info('naming_contexts = {}'.format(self.server.info.naming_contexts))
-    
+
     def whoami(self):
         if self.server and self.connection:
             log_info(self.connection.extend.standard.who_am_i())
@@ -388,7 +392,6 @@ class LdapsearchAd:
             log_error('Not connected to LDAP server. Please authenticate yourself before trying to search something.')
             sys.exit(4)
         return r
-
 
     def __list_groups(self, entry):
         """Return a list containing the CN of each group the parameter is member of."""
@@ -416,7 +419,6 @@ class LdapsearchAd:
                 groups.append(group_cn)
         return groups
 
-
     def __print_user_details(self, user, tab=''):
         """Print info of a user (samacountname and userAccountControl)."""
         log_info('{}{}'.format(tab, user.samAccountName.value))
@@ -438,7 +440,6 @@ class LdapsearchAd:
         if 'memberOf' in user.entry_attributes_as_dict.keys():
             log_info('{}|___memberOf = {}'.format(tab, ', '.join(self.__list_groups(user))))
 
-
     def __print_user_brief(self, user, tab=''):
         """Print info of a user on a single line (samacountname and userAccountControl)."""
         if str_object_type(user) != 'user':
@@ -454,20 +455,17 @@ class LdapsearchAd:
             else:
                 log_info('{}{}'.format(tab, user.sAMAccountName.value))
 
-
     def print_users(self, search_filter, attributes='*', size_limit=100):
         """Method to pretty print a set a users attributes."""
         r_search = self.search(search_filter, attributes, size_limit=size_limit)
         for user in r_search:
             self.__print_user_details(user)
 
-
     def print_users_list(self, search_filter, attributes='*', size_limit=100):
         """Method to pretty list print a set a users attributes."""
         r_search = self.search(search_filter, attributes, size_limit=size_limit)
         for user in r_search:
             self.__print_user_brief(user)
-
 
     def print_admins(self, size_limit=100):
         """Method to get a list of members of the "admin" group."""
@@ -485,7 +483,6 @@ class LdapsearchAd:
             for result in r_search:
                 self.__print_user_brief(result, '    ')
 
-
     def print_trusts(self):
         """Method to get infos about trusts."""
         for trust in self.search('objectClass=trustedDomain'):
@@ -498,7 +495,6 @@ class LdapsearchAd:
                 log_info('|___securityIdentifier = {}'.format(ldap3.protocol.formatters.formatters.format_sid(trust.securityIdentifier.value)))
             log_info('|___whenCreated = {}'.format(trust.whenCreated.value))
             log_info('|___whenChanged = {}'.format(trust.whenChanged.value))
-        
 
     def print_kerberoast(self):
         """Method to get infos about kerberoastable users."""
@@ -506,7 +502,6 @@ class LdapsearchAd:
         search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
         for kerberoastable_user in self.search(search_filter, search_attributes):
             log_success('{}'.format(kerberoastable_user))
-
 
     def print_search_spn(self, search_filter, size_limit=100):
         """Method to find services registered in the AD."""
@@ -516,30 +511,26 @@ class LdapsearchAd:
         for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
             log_success('{}'.format(spn_user))
 
-
     def print_asreqroast(self):
-        """Method to get all account that are vulnerable to ASREPRoast."""
-        """Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
+        """Method to get all accounts that are vulnerable to ASREPRoast.
+        Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
         search_filter = '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304))'
-        search_attributes =  ['cn', 'samaccountname']
-        for asreqroastuser in self.search(search_filter,search_attributes):
+        search_attributes = ['cn', 'samaccountname']
+        for asreqroastuser in self.search(search_filter, search_attributes):
             log_success('{}'.format(asreqroastuser))
-    
 
     def print_lastpwchangekrbtgt(self):
         """Method to retreive the last time the password for krbtgt was reset."""
         search_filter = '(cn=krbtgt)'
         search_attributes = ['whenChanged']
-        log_success(self.search(search_filter,search_attributes))
-
+        log_info(self.search(search_filter, search_attributes))
 
     def print_search_delegation(self):
-        """Method to retreive account with delegation set"""
+        """Method to retreive accounts with delegation set"""
         search_filter = '(userAccountControl:1.2.840.113556.1.4.803:=524288)'
-        search_attributes = ['cn','samaccountname']
-        for accountdelegation in self.search(search_filter,search_attributes):
+        search_attributes = ['cn', 'samaccountname']
+        for accountdelegation in self.search(search_filter, search_attributes):
             log_success('{}'.format(accountdelegation))
-
 
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
@@ -566,7 +557,6 @@ class LdapsearchAd:
             log_info('|___Lockout threshold = {}'.format(attributes['lockoutThreshold'][0]))
             log_info('|___  Lockout duration = {}'.format(str_human_date(attributes['lockoutDuration'][0])))
             log_info('|___  Lockout observation window = {}'.format(str_human_date(attributes['lockOutObservationWindow'][0])))
-
 
     def __print_pass_pol(self, pass_pol):
         """Print info about a Fine-Grained Password Policy."""
@@ -599,7 +589,6 @@ class LdapsearchAd:
             log_info('|___  Lockout duration = {}'.format(str_human_date(attributes['msDS-LockoutDuration'][0])))
             log_info('|___  Lockout observation window = {}'.format(str_human_date(attributes['msDS-LockoutObservationWindow'][0])))
 
-
     def print_pass_pols(self):
         """Main function to get info about password policies."""
         # get default password policy
@@ -616,13 +605,13 @@ class LdapsearchAd:
             self.__print_pass_pol(fgpp)
 
 
-
 def main():
     # Parse arguments
     argParser = argparse.ArgumentParser(description="Active Directory LDAP Enumerator")
     argParser.add_argument('-l', '--server', required=True, dest='ldap_server', help='IP address of the LDAP server.')
     argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
-    argParser.add_argument('-t', '--type', required=True, dest='request_type', help='Request type: info, whoami, search, search-large, trusts, pass-pols, show-admins, show-user, show-user-list, kerberoast, all')
+    argParser.add_argument('-t', '--type', required=True, dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
+        pass-pols, show-admins, show-user, show-user-list, kerberoast, all')
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
     argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
@@ -699,48 +688,40 @@ def main():
                 for attribute in sorted(entry.entry_attributes):
                     log_info('|___{} = {}'.format(attribute, entry[attribute]))
 
-
         # Get users
         elif action == 'show-user':
             log_title('Result of "show-user" command', 3)
             ldap.print_users(args.search_filter, args.search_attributes, args.size_limit)
-            
 
         # Get users
         elif action == 'show-user-list':
             log_title('Result of "show-user" command', 3)
             ldap.print_users_list(args.search_filter, args.search_attributes, args.size_limit)
-            
 
         # Get admins
         elif action == 'admins':
             log_title('Result of "admins" command', 3)
             ldap.print_admins()
-            
 
         # Get kerberoastable users accounts
         elif action == 'pass-pols':
             log_title('Result of "pass-pols" command', 3)
             ldap.print_pass_pols()
-            
 
         # Get trusts
         elif action == 'trusts':
             log_title('Result of "trusts" command', 3)
             ldap.print_trusts()
-            
 
         # Get kerberoastable users accounts
         elif action == 'kerberoast':
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
 
-
         # Get ASRepRoast user account
         elif action == 'asreproast':
-            log_title('Result of "asreproast" command',3)
+            log_title('Result of "asreproast" command', 3)
             ldap.print_asreqroast()
-
 
         elif action == 'search-spn':
             log_title('Result of "search-spn" command', 3)
@@ -751,9 +732,8 @@ def main():
             ldap.print_lastpwchangekrbtgt()
 
         elif action == 'search-delegation':
-            log_title('Result of "search-delegation" command',3)
+            log_title('Result of "search-delegation" command', 3)
             ldap.print_search_delegation()
-
 
         # Run all checks
         elif action == 'all':
@@ -767,11 +747,11 @@ def main():
             ldap.print_trusts()
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
-            log_title('Result of "asreqroast" command',3)
+            log_title('Result of "asreqroast" command', 3)
             ldap.print_asreqroast()
-            log_title('Result of "goldenticket" command',3)
+            log_title('Result of "goldenticket" command', 3)
             ldap.print_lastpwchangekrbtgt()
-            log_title('Result of "search-delegation" command',3)
+            log_title('Result of "search-delegation" command', 3)
             ldap.print_search_delegation()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
@@ -779,4 +759,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
