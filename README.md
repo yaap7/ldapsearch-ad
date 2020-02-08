@@ -223,7 +223,7 @@ DN: CN=MTLDC1,OU=Domain Controllers,DC=evilcorp,DC=lab2 - STATUS: Read - READ TI
 
 Done:
 
-* [x] add a command to get users vulnerables to AS-REP-roasting (thanks @HadrienPerrineau)
+* [x] add a command to get users vulnerables to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
 
 
@@ -231,3 +231,6 @@ Done:
 
 Thanks to [Bengui](https://youtu.be/xKG9v0UfuH0?t=228) for the username convention.
 
+Obviously, all credits goes to people who discover the technics and vulnerabilities.
+This tool is only an humble attempt to implement their technics using python3 to understand how things work and because I like to play with the LDAP interface of Active Directory.
+Unfortunately, it will probably disapear in the future :(
