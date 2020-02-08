@@ -215,15 +215,15 @@ DN: CN=MTLDC1,OU=Domain Controllers,DC=evilcorp,DC=lab2 - STATUS: Read - READ TI
 
 ## TODO
 
-* [ ] give usefull `search` examples (see https://phonexicum.github.io/infosec/windows.html and https://blog.xpnsec.com/kerberos-attacks-part-2/) ;
-* [ ] add pretty output for other functions (get-user, get-spn, etc) while keeping a json output ;
-* [ ] add a command to get users vulnerables to AS-REP-roasting
+* [ ] give usefull `search` examples (see https://phonexicum.github.io/infosec/windows.html and https://blog.xpnsec.com/kerberos-attacks-part-2/)
+* [ ] test the json output for all functionalities
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 * [ ] implement ldap3 pagging functionality
 * [ ] continuously improve this documentation
 
-for v2:
+Done:
 
+* [x] add a command to get users vulnerables to AS-REP-roasting (thanks @HadrienPerrineau)
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
 
 
