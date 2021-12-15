@@ -343,16 +343,22 @@ class LdapsearchAd:
 
     last_errors = []
 
-    def __init__(self, hostname, ssl=False, domain=None, username=None, password=None):
+    def __init__(self, hostname, ssl=False, domain=None, username=None, password=None,hashes=None):
         self.hostname = hostname
         self.domain = domain
         self.username = username
         self.password = password
-
+        self.hashes = hashes
+        if self.hashes is not None:
+            self.lmhash, self.nthash = self.hashes.split(':')
         try:
             self.server = ldap3.Server(self.hostname, use_ssl=ssl, get_info='ALL')
             if self.domain and self.username and self.password:
                 self.connection = ldap3.Connection(self.server, user='{}\\{}'.format(self.domain, self.username), password=self.password, authentication='NTLM', auto_bind=True)
+            elif self.hashes is not None:
+                if self.lmhash == "":
+                    self.lmhash = "aad3b435b51404eeaad3b435b51404ee"
+                self.connection = ldap3.Connection(self.server, user='{}\\{}'.format(self.domain, self.username), password=self.lmhash + ":" + self.nthash, authentication=ldap3.NTLM, auto_bind=True)
             else:
                 self.connection = ldap3.Connection(self.server, auto_bind=True)
         except ldap3.core.exceptions.LDAPSocketOpenError:
@@ -615,6 +621,8 @@ def main():
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
     argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
+    argParser.add_argument('-hashes', action="store", metavar = "LMHASH:NTHASH", help='NTLM hashes, format is LMHASH:NTHASH')
+
     argParser.add_argument('-s', '--search-filter', dest='search_filter', help='Search filter (use LDAP format).')
     argParser.add_argument('search_attributes', default='*', nargs='*', help='LDAP attributes to look for (default is all).')
     argParser.add_argument('-z', '--size_limit', dest='size_limit', default=100, help='Size limit (default is 100, or server\' own limit).')
@@ -625,20 +633,20 @@ def main():
     # Set mandatory arguments for each request_type
     mandatory_arguments = {}
     mandatory_arguments['info'] = []
-    mandatory_arguments['whoami'] = ['domain', 'username', 'password']
-    mandatory_arguments['search'] = ['domain', 'username', 'password', 'search_filter']
-    mandatory_arguments['search-large'] = ['domain', 'username', 'password', 'search_filter']
-    mandatory_arguments['trusts'] = ['domain', 'username', 'password']
-    mandatory_arguments['pass-pols'] = ['domain', 'username', 'password']
-    mandatory_arguments['admins'] = ['domain', 'username', 'password']
-    mandatory_arguments['show-user'] = ['domain', 'username', 'password', 'search_filter']
-    mandatory_arguments['show-user-list'] = ['domain', 'username', 'password', 'search_filter']
-    mandatory_arguments['kerberoast'] = ['domain', 'username', 'password']
-    mandatory_arguments['search-spn'] = ['domain', 'username', 'password', 'search_filter']
-    mandatory_arguments['asreproast'] = ['domain', 'username', 'password']
-    mandatory_arguments['goldenticket'] = ['domain', 'username', 'password']
-    mandatory_arguments['search-delegation'] = ['domain', 'username', 'password']
-    mandatory_arguments['all'] = ['domain', 'username', 'password']
+    mandatory_arguments['whoami'] = ['domain', 'username']
+    mandatory_arguments['search'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['search-large'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['trusts'] = ['domain', 'username']
+    mandatory_arguments['pass-pols'] = ['domain', 'username']
+    mandatory_arguments['admins'] = ['domain', 'username']
+    mandatory_arguments['show-user'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['show-user-list'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['kerberoast'] = ['domain', 'username']
+    mandatory_arguments['search-spn'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['asreproast'] = ['domain', 'username']
+    mandatory_arguments['goldenticket'] = ['domain', 'username']
+    mandatory_arguments['search-delegation'] = ['domain', 'username']
+    mandatory_arguments['all'] = ['domain', 'username']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
         if action not in mandatory_arguments.keys():
@@ -660,7 +668,7 @@ def main():
     logger.addHandler(handler)
 
     # Connection to the LDAP server using credentials provided in argument
-    ldap = LdapsearchAd(args.ldap_server, args.ssl, args.domain, args.username, args.password)
+    ldap = LdapsearchAd(args.ldap_server, args.ssl, args.domain, args.username, args.password,args.hashes)
     if not ldap.server or not ldap.connection:
         log_error('Error, unable to connect to {} using {}\\{}'.format(args.ldap_server, args.domain, args.username))
         for error in ldap.last_errors:
