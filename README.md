@@ -1,3 +1,7 @@
+# add Authentication by hash
+```
+python ldapsearch-ad.py -l 10.1.1.1 -d ex.com -u administrator -hashes :32ed87bdb5fdc5e9cba88547376818d4 -t admins
+```
 # ldapsearch-ad.py
 
 Python3 script to quickly get various information from a domain controller through his LDAP service.
@@ -25,23 +29,26 @@ Help:
 
 ```
 $ ./ldapsearch-ad.py -h
-usage: ldapsearch-ad.py [-h] -l LDAP_SERVER -t REQUEST_TYPE [-d DOMAIN]
-                        [-u USERNAME] [-p PASSWORD] [-s SEARCH_FILTER]
-                        [-z SIZE_LIMIT] [-o OUTPUT_FILE] [-v]
+usage: ldapsearch-ad.py [-h] -l LDAP_SERVER [-ssl] -t REQUEST_TYPE [-d DOMAIN]
+                        [-u USERNAME] [-p PASSWORD] [-hashes LMHASH:NTHASH]
+                        [-s SEARCH_FILTER] [-z SIZE_LIMIT] [-o OUTPUT_FILE]
+                        [-v]
                         [search_attributes [search_attributes ...]]
 
 Active Directory LDAP Enumerator
 
 positional arguments:
-  search_attributes     LDAP attributes to look for.
+  search_attributes     LDAP attributes to look for (default is all).
 
 optional arguments:
   -h, --help            show this help message and exit
   -l LDAP_SERVER, --server LDAP_SERVER
                         IP address of the LDAP server.
+  -ssl, --ssl           Force an SSL connection?.
   -t REQUEST_TYPE, --type REQUEST_TYPE
-                        Request type: info, whoami, search, trusts, pass-pols,
-                        show-domain-admins, show-user, auto
+                        Request type: info, whoami, search, search-large,
+                        trusts, pass-pols, show-admins, show-user, show-user-
+                        list, kerberoast, all
   -d DOMAIN, --domain DOMAIN
                         Authentication account's FQDN. Example:
                         "contoso.local".
@@ -49,10 +56,12 @@ optional arguments:
                         Authentication account's username.
   -p PASSWORD, --password PASSWORD
                         Authentication account's password.
+  -hashes LMHASH:NTHASH
+                        NTLM hashes, format is LMHASH:NTHASH
   -s SEARCH_FILTER, --search-filter SEARCH_FILTER
                         Search filter (use LDAP format).
   -z SIZE_LIMIT, --size_limit SIZE_LIMIT
-                        Size limit (default is server's limit).
+                        Size limit (default is 100, or server' own limit).
   -o OUTPUT_FILE, --output OUTPUT_FILE
                         Write results in specified file too.
   -v, --verbose         Turn on debug mode
