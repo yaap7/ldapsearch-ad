@@ -6,6 +6,8 @@ import ldap3
 import logging
 import re
 import sys
+import struct
+import codecs
 
 
 def c_red(message):
@@ -331,6 +333,13 @@ def debug_var(var):
         print(i)
     print('====================')
 
+def convert_sid_to_string(hexstr):
+    value = codecs.encode(bytes(hexstr[0]),'hex')
+    init_value = bytes(hexstr[0])
+    value = 'S-1-5'
+    for i in range(8, len(init_value), 4):
+        value += '-{}'.format(str(struct.unpack('<I', init_value[i:i+4])[0]))
+    return value
 
 class LdapsearchAd:
 
@@ -609,6 +618,29 @@ class LdapsearchAd:
             log_info('No fine grained password policy found (high privileges are required).')
         for fgpp in fgpps:
             self.__print_pass_pol(fgpp)
+    def create_sid(self):
+        """Main function to get info about createsid from ms-ds-creatorsid."""
+        # get all createsid without parse
+        search_filter = '(&(ms-ds-creatorsid=*))'
+        search_attributes = ['sAMAccountName', 'mS-DS-CreatorSID']
+        for asreqroastuser in self.search(search_filter, search_attributes):
+            log_success('{}'.format(asreqroastuser))
+            # print(asreqroastuser['sAMAccountName'])
+            if asreqroastuser['mS-DS-CreatorSID'] != "":
+                sid_str = convert_sid_to_string(asreqroastuser['mS-DS-CreatorSID'])        
+            
+            log_info(sid_str)
+            # parse objectSid
+            search_filter_get_name = '(objectSid={})'.format(sid_str)
+            search_attributes_get_name = ['sAMAccountName']
+            asreqroastuser_get_name_obj = self.search(search_filter_get_name, search_attributes_get_name)
+            if asreqroastuser_get_name_obj:
+                for asreqroastuser_get_name in asreqroastuser_get_name_obj:
+                    if asreqroastuser_get_name['sAMAccountName'] != None:
+                        log_info('CreatorSID: {}'.format(asreqroastuser_get_name['sAMAccountName']))
+            else:
+                log_error("Maybe already deleted")
+            print("")
 
 
 def main():
@@ -617,7 +649,7 @@ def main():
     argParser.add_argument('-l', '--server', required=True, dest='ldap_server', help='IP address of the LDAP server.')
     argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
     argParser.add_argument('-t', '--type', required=True, dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
-        pass-pols, show-admins, show-user, show-user-list, kerberoast, all')
+        pass-pols, show-admins, show-user, show-user-list, kerberoast, all, createsid')
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
     argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
@@ -647,6 +679,7 @@ def main():
     mandatory_arguments['goldenticket'] = ['domain', 'username']
     mandatory_arguments['search-delegation'] = ['domain', 'username']
     mandatory_arguments['all'] = ['domain', 'username']
+    mandatory_arguments['createsid'] = ['domain', 'username']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
         if action not in mandatory_arguments.keys():
@@ -761,6 +794,10 @@ def main():
             ldap.print_lastpwchangekrbtgt()
             log_title('Result of "search-delegation" command', 3)
             ldap.print_search_delegation()
+        elif action == 'createsid':
+            log_title('Result of "createsid" command', 3)
+            ldap.create_sid()
+
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
