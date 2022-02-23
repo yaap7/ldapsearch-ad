@@ -2,7 +2,7 @@
 
 Python3 script to quickly get various information from a domain controller through its LDAP service.
 
-I'm used to launch it as soon as I get valid AD credentials, after [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/).
+I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/) are processing.
 
 ## Quick RTFM
 
@@ -246,7 +246,7 @@ I would even make you a [collaborator](https://docs.github.com/en/account-and-pr
 ### Contributors
 
 * [CSbyGB](https://github.com/CSbyGB) for typos corrections
-* [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team) for the connection using NTLM hash instead of password
+* [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team) for the connection using NTLM hash instead of password, and the `createsid` feature.
 
 ## Credits
 
