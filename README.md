@@ -200,6 +200,12 @@ Authenticate with a hash instead of a password:
 ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -hashes :32ed87bdb5fdc5e9cba88547376818d4 -t show-admins
 ```
 
+Get info about createsid from ms-ds-creatorsid:
+
+``` bash
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t createsid
+```
+
 ## Advanced usage using search
 
 Search for any information using the powerful ldap filter syntax with `-t search`:
