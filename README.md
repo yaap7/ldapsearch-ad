@@ -18,6 +18,12 @@ And once you get valid credentials, you will want to use `-all`:
 ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t all
 ```
 
+Thanks to [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team), it is now possible to use it even with the hash:
+
+``` bash
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -hashes :32ed87bdb5fdc5e9cba88547376818d4 -t show-admins
+```
+
 ## Usage
 
 Help:
@@ -188,6 +194,12 @@ Looking for all password policies on LDAP server 192.168.56.20
 No fine grained password policy found (high privileges are often required).
 ```
 
+Authenticate with a hash instead of a password:
+
+``` bash
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -hashes :32ed87bdb5fdc5e9cba88547376818d4 -t show-admins
+```
+
 ## Advanced usage using search
 
 Search for any information using the powerful ldap filter syntax with `-t search`:
@@ -227,7 +239,8 @@ I would even make you a [collaborator](https://docs.github.com/en/account-and-pr
 
 ### Contributors
 
-* [CSbyGB](https://github.com/CSbyGB)
+* [CSbyGB](https://github.com/CSbyGB) for typos corrections
+* [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team) for the connection using NTLM hash instead of password
 
 ## Credits
 
