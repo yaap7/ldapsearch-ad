@@ -221,7 +221,9 @@ Done:
 
 ## Contributions
 
-Feel free to fork, adapt, modify, contribute, and do not hesitate to send a pull request so the tool could be improved for everyone!
+Feel free to fork, adapt, modify, contribute, and do not hesitate to send a pull request so the tool could be improved for everyone.
+
+I would even make you a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) so you could contribute directly on this repo!
 
 ### Contributors
 
