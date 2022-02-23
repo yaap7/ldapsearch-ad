@@ -1,6 +1,6 @@
 # ldapsearch-ad.py
 
-Python3 script to quickly get various information from a domain controller through his LDAP service.
+Python3 script to quickly get various information from a domain controller through its LDAP service.
 
 I'm used to launch it as soon as I get valid AD credentials, after [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/).
 
@@ -25,26 +25,22 @@ Help:
 
 ```
 $ ./ldapsearch-ad.py -h
-usage: ldapsearch-ad.py [-h] -l LDAP_SERVER -t REQUEST_TYPE [-d DOMAIN]
-                        [-u USERNAME] [-p PASSWORD] [-s SEARCH_FILTER]
-                        [-z SIZE_LIMIT] [-o OUTPUT_FILE] [-v]
-                        [search_attributes [search_attributes ...]]
+usage: ldapsearch-ad.py [-h] -l LDAP_SERVER [-ssl] -t REQUEST_TYPE [-d DOMAIN] [-u USERNAME] [-p PASSWORD] [-s SEARCH_FILTER] [-z SIZE_LIMIT] [-o OUTPUT_FILE] [-v] [search_attributes ...]
 
 Active Directory LDAP Enumerator
 
 positional arguments:
-  search_attributes     LDAP attributes to look for.
+  search_attributes     LDAP attributes to look for (default is all).
 
 optional arguments:
   -h, --help            show this help message and exit
   -l LDAP_SERVER, --server LDAP_SERVER
                         IP address of the LDAP server.
+  -ssl, --ssl           Force an SSL connection?.
   -t REQUEST_TYPE, --type REQUEST_TYPE
-                        Request type: info, whoami, search, trusts, pass-pols,
-                        show-domain-admins, show-user, auto
+                        Request type: info, whoami, search, search-large, trusts, pass-pols, show-admins, show-user, show-user-list, kerberoast, all
   -d DOMAIN, --domain DOMAIN
-                        Authentication account's FQDN. Example:
-                        "contoso.local".
+                        Authentication account's FQDN. Example: "contoso.local".
   -u USERNAME, --username USERNAME
                         Authentication account's username.
   -p PASSWORD, --password PASSWORD
@@ -52,7 +48,7 @@ optional arguments:
   -s SEARCH_FILTER, --search-filter SEARCH_FILTER
                         Search filter (use LDAP format).
   -z SIZE_LIMIT, --size_limit SIZE_LIMIT
-                        Size limit (default is server's limit).
+                        Size limit (default is 100, or server' own limit).
   -o OUTPUT_FILE, --output OUTPUT_FILE
                         Write results in specified file too.
   -v, --verbose         Turn on debug mode
@@ -196,7 +192,7 @@ No fine grained password policy found (high privileges are often required).
 
 ## Advanced usage using search
 
-Search for any information using the powerfull ldap filter syntax with `-t search`:
+Search for any information using the powerful ldap filter syntax with `-t search`:
 
 ```
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t search -s '(&(objectClass=user)(servicePrincipalName=*))' cn serviceprincipalname
@@ -215,7 +211,7 @@ DN: CN=MTLDC1,OU=Domain Controllers,DC=evilcorp,DC=lab2 - STATUS: Read - READ TI
 
 ## TODO
 
-* [ ] give usefull `search` examples (see https://phonexicum.github.io/infosec/windows.html and https://blog.xpnsec.com/kerberos-attacks-part-2/)
+* [ ] give useful `search` examples (see https://phonexicum.github.io/infosec/windows.html and https://blog.xpnsec.com/kerberos-attacks-part-2/)
 * [ ] test the json output for all functionalities
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 * [ ] implement ldap3 pagging functionality
@@ -223,7 +219,7 @@ DN: CN=MTLDC1,OU=Domain Controllers,DC=evilcorp,DC=lab2 - STATUS: Read - READ TI
 
 Done:
 
-* [x] add a command to get users vulnerables to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
+* [x] add a command to get vulnerable users to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
 
 
