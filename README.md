@@ -4,7 +4,6 @@ Python3 script to quickly get various information from a domain controller throu
 
 I'm used to launch it as soon as I get valid AD credentials, after [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/).
 
-
 ## Quick RTFM
 
 Basically, if you do not have valid credentials yet, you can only use:
@@ -23,7 +22,7 @@ ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t all
 
 Help:
 
-```
+``` text
 $ ./ldapsearch-ad.py -h
 usage: ldapsearch-ad.py [-h] -l LDAP_SERVER [-ssl] -t REQUEST_TYPE [-d DOMAIN] [-u USERNAME] [-p PASSWORD] [-s SEARCH_FILTER] [-z SIZE_LIMIT] [-o OUTPUT_FILE] [-v] [search_attributes ...]
 
@@ -54,10 +53,9 @@ optional arguments:
   -v, --verbose         Turn on debug mode
 ```
 
-
 Retrieve server **information** without credentials using `-t info`:
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -t info
 Getting info from LDAP server 192.168.56.20
 Forest functionality level = Windows 2012 R2
@@ -71,7 +69,7 @@ naming_contexts = ['DC=evilcorp,DC=lab2', 'CN=Configuration,DC=evilcorp,DC=lab2'
 
 Check authentication using `-t whoami`:
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u bbilly -p 'P@$$w0rd' -t whoami
 Executing whoami on LDAP server 192.168.56.20
 You are: "u:EVILCORP\bbilly"
@@ -79,7 +77,7 @@ You are: "u:EVILCORP\bbilly"
 
 List **trusts** attributes using `-t trusts` (user account needed):
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t trusts
 Looking for trusts on LDAP server 192.168.56.20
 Trust =
@@ -95,7 +93,7 @@ Trust =
 
 List **password policies** using `-t pass-pols` (user account needed for default password policy / admin account needed for fine grained password policies):
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t pass-pols
 Looking for all password policies on LDAP server 192.168.56.20
 + Default password policy:
@@ -107,7 +105,7 @@ No fine grained password policy found (high privileges are often required).
 
 Show the **domain admins** and their most interesting flags using `-t show-domain-admins` (user account needed):
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-domain-admins
 Looking for domain admins on LDAP server 192.168.56.20
 Domain admin group's distinguishedName = CN=Domain Admins,CN=Users,DC=evilcorp,DC=lab2 
@@ -119,7 +117,7 @@ Domain admin group's distinguishedName = CN=Domain Admins,CN=Users,DC=evilcorp,D
 
 Show the most interesting attributes of a user using `-t show-user` (user account needed):
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-user -s '(samaccountname=bbilly)'
 Looking for users on LDAP server 192.168.56.20
 + bbilly
@@ -132,7 +130,7 @@ Looking for users on LDAP server 192.168.56.20
 
 or even computers or groups. Everything depend of the search parameter `-s`.
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-user -s '(samaccountname=mtldc1$)'
 Looking for users on LDAP server 192.168.56.20
 + MTLDC1$
@@ -152,7 +150,7 @@ Looking for users on LDAP server 192.168.56.20
 
 Retrieve all interesting information with a simple user account using `-t auto`:
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t auto
 ###  Server Info  ###
 Getting info from LDAP server 192.168.56.20
@@ -194,7 +192,7 @@ No fine grained password policy found (high privileges are often required).
 
 Search for any information using the powerful ldap filter syntax with `-t search`:
 
-```
+``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t search -s '(&(objectClass=user)(servicePrincipalName=*))' cn serviceprincipalname
 Searching on LDAP server 192.168.56.20
 Entry = 
@@ -208,10 +206,9 @@ DN: CN=MTLDC1,OU=Domain Controllers,DC=evilcorp,DC=lab2 - STATUS: Read - READ TI
 […]
 ```
 
-
 ## TODO
 
-* [ ] give useful `search` examples (see https://phonexicum.github.io/infosec/windows.html and https://blog.xpnsec.com/kerberos-attacks-part-2/)
+* [ ] give useful `search` examples (see <https://phonexicum.github.io/infosec/windows.html> and <https://blog.xpnsec.com/kerberos-attacks-part-2/>)
 * [ ] test the json output for all functionalities
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 * [ ] implement ldap3 pagging functionality
@@ -222,6 +219,13 @@ Done:
 * [x] add a command to get vulnerable users to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
 
+## Contributions
+
+Feel free to fork, adapt, modify, contribute, and do not hesitate to send a pull request so the tool could be improved for everyone!
+
+### Contributors
+
+* [CSbyGB](https://github.com/CSbyGB)
 
 ## Credits
 
