@@ -657,7 +657,7 @@ def main():
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
     argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
-    argParser.add_argument('-H', '-hashes', action="store", metavar='LMHASH:NTHASH', help='NTLM hashes, format is LMHASH:NTHASH')
+    argParser.add_argument('-H', '-hashes', dest="hashes", help='NTLM hashes, format is LMHASH:NTHASH')
     argParser.add_argument('-s', '--search-filter', dest='search_filter', help='Search filter (use LDAP format).')
     argParser.add_argument('search_attributes', default='*', nargs='*', help='LDAP attributes to look for (default is all).')
     argParser.add_argument('-z', '--size_limit', dest='size_limit', default=100, help='Size limit (default is 100, or server\' own limit).')
