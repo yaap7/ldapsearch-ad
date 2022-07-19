@@ -206,6 +206,13 @@ Get info about createsid from ms-ds-creatorsid:
 ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t createsid
 ```
 
+It is possible to append the output in a file by using `-o <filename>`.
+For instance:
+
+``` bash
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t info -o info_from_DC.log
+```
+
 ## Advanced usage using search
 
 Search for any information using the powerful ldap filter syntax with `-t search`:
@@ -247,6 +254,7 @@ I would even make you a [collaborator](https://docs.github.com/en/account-and-pr
 
 * [CSbyGB](https://github.com/CSbyGB) for typos corrections
 * [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team) for the connection using NTLM hash instead of password, and the `createsid` feature.
+* [nsilver7](https://github.com/nsilver7) for the option to append the output in a file in addition to the standard output.
 
 ## Credits
 
