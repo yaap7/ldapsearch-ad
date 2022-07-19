@@ -701,6 +701,10 @@ def main():
         logger.setLevel(logging.INFO)
         formatter = logging.Formatter(fmt='%(message)s')
     handler.setFormatter(formatter)
+    if args.output_file:
+        f_handler = logging.FileHandler(args.output_file)
+        f_handler.setFormatter(formatter)
+        logger.addHandler(f_handler)
     logger.addHandler(handler)
 
     # Connection to the LDAP server using credentials provided in argument
