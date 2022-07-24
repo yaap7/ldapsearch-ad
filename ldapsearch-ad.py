@@ -494,7 +494,7 @@ class LdapsearchAd:
         r_search = self.search(search_filter, ['distinguishedName', 'cn'], size_limit=10)
         for admin_group in r_search:
             admins_dn = admin_group.distinguishedName.value
-            print('All members of group "{}":'.format(admin_group.cn.value))
+            log_info('All members of group "{}":'.format(admin_group.cn.value))
             # from this distinguishedName, find all members recursively
             search_filter = '(&(memberOf:1.2.840.113556.1.4.1941:={})(!(objectClass=group)))'.format(admins_dn)
             attributes = ['objectClass', 'name', 'userAccountControl', 'sAMAccountName', 'sAMAccountType']
@@ -553,7 +553,7 @@ class LdapsearchAd:
 
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
-        print('Default password policy:')
+        log_info('Default password policy:')
         attributes = pass_pol.entry_attributes_as_dict
         pass_len = attributes['minPwdLength'][0]
         # Password length
@@ -579,7 +579,7 @@ class LdapsearchAd:
 
     def __print_pass_pol(self, pass_pol):
         """Print info about a Fine-Grained Password Policy."""
-        print('Fined grained password policy found: {}'.format(c_cyan(pass_pol.cn.value)))
+        log_info('Fined grained password policy found: {}'.format(c_cyan(pass_pol.cn.value)))
         attributes = pass_pol.entry_attributes_as_dict
         log_info('|____Password settings precedence = {}'.format(attributes['msDS-PasswordSettingsPrecedence'][0]))
         pass_len = attributes['msDS-MinimumPasswordLength'][0]
@@ -644,7 +644,6 @@ class LdapsearchAd:
                         log_info('CreatorSID: {}'.format(asreqroastuser_get_name['sAMAccountName']))
             else:
                 log_error("Maybe already deleted")
-            print("")
 
 
 def main():
