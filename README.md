@@ -4,6 +4,16 @@ Python3 script to quickly get various information from a domain controller throu
 
 I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/) are processing.
 
+## Installation
+
+Simply get the source code and install the requirements:
+
+``` bash
+git clone https://github.com/yaap7/ldapsearch-ad.git
+cd ldapsearch-ad
+pip install -r ./requirements.txt
+```
+
 ## Quick RTFM
 
 Basically, if you do not have valid credentials yet, you can only use:
