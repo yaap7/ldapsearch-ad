@@ -1,6 +1,8 @@
 # ldapsearch-ad.py
 
 ![Python version](https://img.shields.io/badge/python-v3.6+-informational)
+![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
+![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
 
 Python3 script to quickly get various information from a domain controller through its LDAP service.
 
