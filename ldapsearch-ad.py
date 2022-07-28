@@ -54,6 +54,10 @@ def log_error(message):
     logging.error('{} {}'.format(c_red('[-]'), message))
 
 
+def log_warning(message):
+    logging.info('{} {}'.format(c_orange('[!]'), message))
+
+
 def log_info(message):
     logging.info('{} {}'.format(c_blue('[+]'), message))
 
@@ -465,7 +469,7 @@ class LdapsearchAd:
             if 'foreignSecurityPrincipal' in user.objectclass.value:
                 log_info('{}{} (objectclass = foreignSecurityPrincipal, probably a user from another domain. Please investigate)'.format(tab, user.name.value))
             else:
-                log_error('{}Invalid type for "{}", not a user?'.format(tab, user.name.value))
+                log_warning(f'{tab}{user.name.value} ({c_orange(str_object_type(user))})')
         else:
             uac_flags = list_uac_colored_flags(user.userAccountControl.value)
             uac_flags.remove('NORMAL_ACCOUNT')
