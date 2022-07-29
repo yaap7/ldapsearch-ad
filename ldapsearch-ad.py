@@ -10,6 +10,13 @@ import struct
 import codecs
 
 
+def print_version():
+    # version number is just the date of the release.
+    # with format: YYYY.MM.DD
+    versionNumber = '2022.07.29'
+    print(f'ldapsearch-ad v{versionNumber}')
+
+
 def c_red(message):
     """Color text for bad configuration."""
     return f'\x1b[0;31;40m{message}\x1b[0m'
@@ -653,9 +660,9 @@ class LdapsearchAd:
 def main():
     # Parse arguments
     argParser = argparse.ArgumentParser(description="Active Directory LDAP Enumerator")
-    argParser.add_argument('-l', '--server', required=True, dest='ldap_server', help='IP address of the LDAP server.')
+    argParser.add_argument('-l', '--server', dest='ldap_server', help='IP address of the LDAP server.')
     argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
-    argParser.add_argument('-t', '--type', required=True, dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
+    argParser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
         pass-pols, show-admins, show-user, show-user-list, kerberoast, createsid, all')
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
@@ -666,7 +673,16 @@ def main():
     argParser.add_argument('-z', '--size_limit', dest='size_limit', default=100, help='Size limit (default is 100, or server\' own limit).')
     argParser.add_argument('-o', '--output', dest='output_file', help='Write results in specified file too.')
     argParser.add_argument('-v', '--verbose', dest='verbosity', help='Turn on debug mode', action='store_true')
+    argParser.add_argument('--version', dest='ask_for_version', help='Show version and exit', action='store_true')
     args = argParser.parse_args()
+
+    if args.ask_for_version:
+        print_version()
+        sys.exit(0)
+
+    # if the version is not asked, we should have at least a target and an action
+    if args.ldap_server is None or args.request_type is None:
+        argParser.error(f'-l/--server and -t/--type are mandatory arguments.')
 
     # Set mandatory arguments for each request_type
     mandatory_arguments = {}
