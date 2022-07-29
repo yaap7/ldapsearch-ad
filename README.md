@@ -1,8 +1,18 @@
 # ldapsearch-ad.py
 
+![Python version](https://img.shields.io/badge/python-v3.6+-informational)
+![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
+![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
+
 Python3 script to quickly get various information from a domain controller through its LDAP service.
 
 I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/) are processing.
+
+## Requirements
+
+* Python version 3.6 or above is required to use f-Strings.
+* `ldap3`: to connect to the ldap service of target domain controller
+* `pycryptodome`: to connect using hash instead of password
 
 ## Installation
 
