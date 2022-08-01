@@ -663,7 +663,8 @@ def main():
     argParser.add_argument('-l', '--server', dest='ldap_server', help='IP address of the LDAP server.')
     argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
     argParser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
-        pass-pols, show-admins, show-user, show-user-list, kerberoast, createsid, all')
+        pass-pols, admins, show-user, show-user-list, kerberoast, search-spn, asreproast, goldenticket,\
+        search-delegation, createsid, all')
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
     argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
     argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
@@ -682,7 +683,7 @@ def main():
 
     # if the version is not asked, we should have at least a target and an action
     if args.ldap_server is None or args.request_type is None:
-        argParser.error(f'-l/--server and -t/--type are mandatory arguments.')
+        argParser.error('-l/--server and -t/--type are mandatory arguments.')
 
     # Set mandatory arguments for each request_type
     mandatory_arguments = {}
