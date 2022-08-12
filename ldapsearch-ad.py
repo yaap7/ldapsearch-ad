@@ -497,22 +497,6 @@ class LdapsearchAd:
         for user in r_search:
             self.__print_user_brief(user)
 
-    def print_admins(self, size_limit=100):
-        """Method to get a list of members of the "admin" group."""
-        search_filter = '|(CN=Administrators)(CN=Administrateurs)(CN=Admins du domaine)(CN=Domain Admins)(CN=Enterprise Admins)'
-        # Get the exact distinguishedName of the "admin" group
-        # needed to perform a recursive search of members of members of members ...
-        r_search = self.search(search_filter, ['distinguishedName', 'cn'], size_limit=10)
-        for admin_group in r_search:
-            admins_dn = admin_group.distinguishedName.value
-            log_info(f'All members of group "{admin_group.cn.value}":')
-            # from this distinguishedName, find all members recursively
-            search_filter = f'(&(memberOf:1.2.840.113556.1.4.1941:={admins_dn})(!(objectClass=group)))'
-            attributes = ['objectClass', 'name', 'userAccountControl', 'sAMAccountName', 'sAMAccountType']
-            r_search = self.search(search_filter, attributes, size_limit=size_limit)
-            for result in r_search:
-                self.__print_user_brief(result, '    ')
-
     def print_trusts(self):
         """Method to get infos about trusts."""
         for trust in self.search('objectClass=trustedDomain'):
@@ -525,42 +509,6 @@ class LdapsearchAd:
                 log_info(f'|___securityIdentifier = {ldap3.protocol.formatters.formatters.format_sid(trust.securityIdentifier.value)}')
             log_info(f'|___whenCreated = {trust.whenCreated.value}')
             log_info(f'|___whenChanged = {trust.whenChanged.value}')
-
-    def print_kerberoast(self):
-        """Method to get infos about kerberoastable users."""
-        search_filter = '(&(objectClass=user)(servicePrincipalName=*)(!(objectClass=computer))(!(cn=krbtgt))(!(userAccountControl:1.2.840.113556.1.4.803:=2)))'
-        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
-        for kerberoastable_user in self.search(search_filter, search_attributes):
-            log_success(f'{kerberoastable_user}')
-
-    def print_search_spn(self, search_filter, size_limit=100):
-        """Method to find services registered in the AD."""
-        if not re.search('serviceprincipalname', search_filter, re.IGNORECASE):
-            search_filter = f'(servicePrincipalName={search_filter}*)'
-        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
-        for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
-            log_success(f'{spn_user}')
-
-    def print_asreqroast(self):
-        """Method to get all accounts that are vulnerable to ASREPRoast.
-        Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
-        search_filter = '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304))'
-        search_attributes = ['cn', 'samaccountname']
-        for asreqroastuser in self.search(search_filter, search_attributes):
-            log_success(f'{asreqroastuser}')
-
-    def print_lastpwchangekrbtgt(self):
-        """Method to retreive the last time the password for krbtgt was reset."""
-        search_filter = '(cn=krbtgt)'
-        search_attributes = ['whenChanged']
-        log_info(self.search(search_filter, search_attributes))
-
-    def print_search_delegation(self):
-        """Method to retreive accounts with delegation set"""
-        search_filter = '(userAccountControl:1.2.840.113556.1.4.803:=524288)'
-        search_attributes = ['cn', 'samaccountname']
-        for accountdelegation in self.search(search_filter, search_attributes):
-            log_success(f'{accountdelegation}')
 
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
@@ -634,6 +582,58 @@ class LdapsearchAd:
         for fgpp in fgpps:
             self.__print_pass_pol(fgpp)
 
+    def print_admins(self, size_limit=100):
+        """Method to get a list of members of the "admin" group."""
+        search_filter = "|(CN=Administrators)(CN=Administrateurs)(CN=Admins du domaine)(CN=Domain Admins)(CN=Enterprise Admins)(CN=Administrateurs de l’entreprise)"
+        # Get the exact distinguishedName of the "admin" group
+        # needed to perform a recursive search of members of members of members ...
+        r_search = self.search(search_filter, ['distinguishedName', 'cn'], size_limit=10)
+        for admin_group in r_search:
+            admins_dn = admin_group.distinguishedName.value
+            log_info(f'All members of group "{admin_group.cn.value}":')
+            # from this distinguishedName, find all members recursively
+            search_filter = f'(&(memberOf:1.2.840.113556.1.4.1941:={admins_dn})(!(objectClass=group)))'
+            attributes = ['objectClass', 'name', 'userAccountControl', 'sAMAccountName', 'sAMAccountType']
+            r_search = self.search(search_filter, attributes, size_limit=size_limit)
+            for result in r_search:
+                self.__print_user_brief(result, '    ')
+
+    def print_kerberoast(self):
+        """Method to get infos about kerberoastable users."""
+        search_filter = '(&(objectClass=user)(servicePrincipalName=*)(!(objectClass=computer))(!(cn=krbtgt))(!(userAccountControl:1.2.840.113556.1.4.803:=2)))'
+        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
+        for kerberoastable_user in self.search(search_filter, search_attributes):
+            log_success(f'{kerberoastable_user}')
+
+    def print_asreqroast(self):
+        """Method to get all accounts that are vulnerable to ASREPRoast.
+        Filter based on https://www.tarlogic.com/en/blog/how-to-attack-kerberos/"""
+        search_filter = '(&(samAccountType=805306368)(userAccountControl:1.2.840.113556.1.4.803:=4194304))'
+        search_attributes = ['cn', 'samaccountname']
+        for asreqroastuser in self.search(search_filter, search_attributes):
+            log_success(f'{asreqroastuser}')
+
+    def print_search_spn(self, search_filter, size_limit=100):
+        """Method to find services registered in the AD."""
+        if not re.search('serviceprincipalname', search_filter, re.IGNORECASE):
+            search_filter = f'(servicePrincipalName={search_filter}*)'
+        search_attributes = ['cn', 'samaccountname', 'serviceprincipalname']
+        for spn_user in self.search(search_filter, search_attributes, size_limit=size_limit):
+            log_success(f'{spn_user}')
+
+    def print_lastpwchangekrbtgt(self):
+        """Method to retreive the last time the password for krbtgt was reset."""
+        search_filter = '(cn=krbtgt)'
+        search_attributes = ['whenChanged']
+        log_info(self.search(search_filter, search_attributes))
+
+    def print_search_delegation(self):
+        """Method to retreive accounts with delegation set"""
+        search_filter = '(userAccountControl:1.2.840.113556.1.4.803:=524288)'
+        search_attributes = ['cn', 'samaccountname']
+        for accountdelegation in self.search(search_filter, search_attributes):
+            log_success(f'{accountdelegation}')
+
     def print_creator_sid(self):
         """Main function to get info about createsid from ms-ds-creatorsid."""
         # get all createsid without parse
@@ -662,7 +662,7 @@ def main():
     argParser = argparse.ArgumentParser(description="Active Directory LDAP Enumerator")
     argParser.add_argument('-l', '--server', dest='ldap_server', help='IP address of the LDAP server.')
     argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
-    argParser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, search-large, trusts,\
+    argParser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, trusts,\
         pass-pols, admins, show-user, show-user-list, kerberoast, search-spn, asreproast, goldenticket,\
         search-delegation, createsid, all')
     argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
@@ -690,15 +690,14 @@ def main():
     mandatory_arguments['info'] = []
     mandatory_arguments['whoami'] = ['domain', 'username']
     mandatory_arguments['search'] = ['domain', 'username', 'search_filter']
-    mandatory_arguments['search-large'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['show-user'] = ['domain', 'username', 'search_filter']
+    mandatory_arguments['show-user-list'] = ['domain', 'username', 'search_filter']
     mandatory_arguments['trusts'] = ['domain', 'username']
     mandatory_arguments['pass-pols'] = ['domain', 'username']
     mandatory_arguments['admins'] = ['domain', 'username']
-    mandatory_arguments['show-user'] = ['domain', 'username', 'search_filter']
-    mandatory_arguments['show-user-list'] = ['domain', 'username', 'search_filter']
     mandatory_arguments['kerberoast'] = ['domain', 'username']
-    mandatory_arguments['search-spn'] = ['domain', 'username', 'search_filter']
     mandatory_arguments['asreproast'] = ['domain', 'username']
+    mandatory_arguments['search-spn'] = ['domain', 'username', 'search_filter']
     mandatory_arguments['goldenticket'] = ['domain', 'username']
     mandatory_arguments['search-delegation'] = ['domain', 'username']
     mandatory_arguments['createsid'] = ['domain', 'username']
@@ -761,25 +760,25 @@ def main():
             log_title('Result of "show-user" command', 3)
             ldap.print_users(args.search_filter, args.search_attributes, args.size_limit)
 
-        # Get users
+        # Get users list
         elif action == 'show-user-list':
             log_title('Result of "show-user" command', 3)
             ldap.print_users_list(args.search_filter, args.search_attributes, args.size_limit)
-
-        # Get admins
-        elif action == 'admins':
-            log_title('Result of "admins" command', 3)
-            ldap.print_admins()
-
-        # Get kerberoastable users accounts
-        elif action == 'pass-pols':
-            log_title('Result of "pass-pols" command', 3)
-            ldap.print_pass_pols()
 
         # Get trusts
         elif action == 'trusts':
             log_title('Result of "trusts" command', 3)
             ldap.print_trusts()
+
+        # Get password policies
+        elif action == 'pass-pols':
+            log_title('Result of "pass-pols" command', 3)
+            ldap.print_pass_pols()
+
+        # Get admins
+        elif action == 'admins':
+            log_title('Result of "admins" command', 3)
+            ldap.print_admins()
 
         # Get kerberoastable users accounts
         elif action == 'kerberoast':
@@ -811,22 +810,18 @@ def main():
         elif action == 'all':
             log_title('Server infos', 3)
             ldap.print_info()
-            log_title('Result of "admins" command', 3)
-            ldap.print_admins()
-            log_title('Result of "pass-pols" command', 3)
-            ldap.print_pass_pols()
             log_title('Result of "trusts" command', 3)
             ldap.print_trusts()
+            log_title('Result of "pass-pols" command', 3)
+            ldap.print_pass_pols()
+            log_title('Result of "admins" command', 3)
+            ldap.print_admins()
             log_title('Result of "kerberoast" command', 3)
             ldap.print_kerberoast()
             log_title('Result of "asreqroast" command', 3)
             ldap.print_asreqroast()
             log_title('Result of "goldenticket" command', 3)
             ldap.print_lastpwchangekrbtgt()
-            log_title('Result of "search-delegation" command', 3)
-            ldap.print_search_delegation()
-            log_title('Result of "creatorsid" command', 3)
-            ldap.print_creator_sid()
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
