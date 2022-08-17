@@ -13,8 +13,8 @@ import codecs
 def print_version():
     # version number is just the date of the release.
     # with format: YYYY.MM.DD
-    versionNumber = '2022.07.29'
-    print(f'ldapsearch-ad v{versionNumber}')
+    version_number = '2022.07.29'
+    print(f'ldapsearch-ad v{version_number}')
 
 
 def c_red(message):
@@ -266,35 +266,35 @@ def str_object_type(entry):
         return c_purple('Unable to find correct type (sAMAccountType not present).')
 
 
-def list_trustType(trustType):
+def list_trust_type(trust_type):
     """Return the trust type as defined here: https://msdn.microsoft.com/en-us/library/cc223771.aspx"""
-    if trustType == 1:
+    if trust_type == 1:
         return 'The trusted domain is a Windows domain not running Active Directory.'
-    elif trustType == 2:
+    elif trust_type == 2:
         return 'The trusted domain is a Windows domain running Active Directory.'
-    elif trustType == 3:
+    elif trust_type == 3:
         return 'The trusted domain is running a non-Windows, RFC4120-compliant Kerberos distribution.'
-    elif trustType == 4:
+    elif trust_type == 4:
         return 'Historical reference; this value is not used in Windows.'
     else:
         return 'Error: unknown value.'
 
 
-def list_trustDirection(trustDirection):
+def list_trust_direction(trust_direction):
     """Return the trust direction as defined here: https://msdn.microsoft.com/en-us/library/cc223768.aspx"""
-    if trustDirection == 0:
+    if trust_direction == 0:
         return 'Disabled'
-    elif trustDirection == 1:
+    elif trust_direction == 1:
         return c_green('Outbound')
-    elif trustDirection == 2:
+    elif trust_direction == 2:
         return c_green('Inbound')
-    elif trustDirection == 3:
+    elif trust_direction == 3:
         return c_cyan('Bidirectional')
     else:
         return c_purple('Error: unknown value.')
 
 
-def list_trustAttributes(ta):
+def list_trust_attributes(ta):
     """Return the trust attribute flags as defined here: https://msdn.microsoft.com/en-us/library/cc223779.aspx"""
     flags = []
     if ta & 0x1 > 0:
@@ -501,9 +501,9 @@ class LdapsearchAd:
         """Method to get infos about trusts."""
         for trust in self.search('objectClass=trustedDomain'):
             log_info(f'+ {trust.name.value} ({trust.flatName.value})')
-            log_info(f'|___trustAttributes = {list_trustAttributes(trust.trustAttributes.value)}')
-            log_info(f'|___trustDirection = {list_trustDirection(trust.trustDirection.value)}')
-            log_info(f'|___trustType = {list_trustType(trust.trustType.value)}')
+            log_info(f'|___trustAttributes = {list_trust_attributes(trust.trustAttributes.value)}')
+            log_info(f'|___trustDirection = {list_trust_direction(trust.trustDirection.value)}')
+            log_info(f'|___trustType = {list_trust_type(trust.trustType.value)}')
             log_info(f'|___trustPartner = {trust.trustPartner.value}')
             if 'securityIdentifier' in trust:
                 log_info(f'|___securityIdentifier = {ldap3.protocol.formatters.formatters.format_sid(trust.securityIdentifier.value)}')
@@ -656,26 +656,35 @@ class LdapsearchAd:
             else:
                 log_error("Maybe already deleted")
 
+    def test_new_search(self):
+        total_entries = 0
+        search_filter = "(samaccountname=it*)"
+        attributes = ["samaccountname"]
+        for entry in self.search(search_filter=search_filter, attributes=attributes, size_limit=22138, page_size=221):
+            total_entries += 1
+            # log_info(f"{entry}")
+        log_success(f"We got {total_entries} entries !")
+
 
 def main():
     # Parse arguments
-    argParser = argparse.ArgumentParser(description="Active Directory LDAP Enumerator")
-    argParser.add_argument('-l', '--server', dest='ldap_server', help='IP address of the LDAP server.')
-    argParser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
-    argParser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, trusts,\
+    arg_parser = argparse.ArgumentParser(description="Active Directory LDAP Enumerator")
+    arg_parser.add_argument('-l', '--server', dest='ldap_server', help='IP address of the LDAP server.')
+    arg_parser.add_argument('-ssl', '--ssl', dest='ssl', action='store_true', help='Force an SSL connection?.')
+    arg_parser.add_argument('-t', '--type', dest='request_type', help='Request type: info, whoami, search, trusts,\
         pass-pols, admins, show-user, show-user-list, kerberoast, search-spn, asreproast, goldenticket,\
         search-delegation, createsid, all')
-    argParser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
-    argParser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
-    argParser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
-    argParser.add_argument('-H', '-hashes', dest="hashes", help='NTLM hashes, format is LMHASH:NTHASH')
-    argParser.add_argument('-s', '--search-filter', dest='search_filter', help='Search filter (use LDAP format).')
-    argParser.add_argument('search_attributes', default='*', nargs='*', help='LDAP attributes to look for (default is all).')
-    argParser.add_argument('-z', '--size_limit', dest='size_limit', default=100, help='Size limit (default is 100, or server\' own limit).')
-    argParser.add_argument('-o', '--output', dest='output_file', help='Write results in specified file too.')
-    argParser.add_argument('-v', '--verbose', dest='verbosity', help='Turn on debug mode', action='store_true')
-    argParser.add_argument('--version', dest='ask_for_version', help='Show version and exit', action='store_true')
-    args = argParser.parse_args()
+    arg_parser.add_argument('-d', '--domain', dest='domain', help='Authentication account\'s FQDN. Example: "contoso.local".')
+    arg_parser.add_argument('-u', '--username', dest='username', help='Authentication account\'s username.')
+    arg_parser.add_argument('-p', '--password', dest='password', help='Authentication account\'s password.')
+    arg_parser.add_argument('-H', '-hashes', dest="hashes", help='NTLM hashes, format is LMHASH:NTHASH')
+    arg_parser.add_argument('-s', '--search-filter', dest='search_filter', help='Search filter (use LDAP format).')
+    arg_parser.add_argument('search_attributes', default='*', nargs='*', help='LDAP attributes to look for (default is all).')
+    arg_parser.add_argument('-z', '--size_limit', dest='size_limit', default=100, help='Size limit (default is 100, or server\' own limit).')
+    arg_parser.add_argument('-o', '--output', dest='output_file', help='Write results in specified file too.')
+    arg_parser.add_argument('-v', '--verbose', dest='verbosity', help='Turn on debug mode', action='store_true')
+    arg_parser.add_argument('--version', dest='ask_for_version', help='Show version and exit', action='store_true')
+    args = arg_parser.parse_args()
 
     if args.ask_for_version:
         print_version()
@@ -683,7 +692,7 @@ def main():
 
     # if the version is not asked, we should have at least a target and an action
     if args.ldap_server is None or args.request_type is None:
-        argParser.error('-l/--server and -t/--type are mandatory arguments.')
+        arg_parser.error('-l/--server and -t/--type are mandatory arguments.')
 
     # Set mandatory arguments for each request_type
     mandatory_arguments = {}
@@ -702,13 +711,14 @@ def main():
     mandatory_arguments['search-delegation'] = ['domain', 'username']
     mandatory_arguments['createsid'] = ['domain', 'username']
     mandatory_arguments['all'] = ['domain', 'username']
+    mandatory_arguments['test'] = ['domain', 'username']
     actions = [i.strip() for i in args.request_type.split(',')]
     for action in actions:
         if action not in mandatory_arguments.keys():
-            argParser.error(f'request type must be one of: {", ".join(mandatory_arguments.keys())}.')
+            arg_parser.error(f'request type must be one of: {", ".join(mandatory_arguments.keys())}.')
         for mandatory_argument in mandatory_arguments[action]:
             if vars(args)[mandatory_argument] is None:
-                argParser.error(f'{mandatory_argument} argument is mandatory with request type = {action}')
+                arg_parser.error(f'{mandatory_argument} argument is mandatory with request type = {action}')
 
     # Configure logging to stdout
     logger = logging.getLogger()
@@ -822,6 +832,11 @@ def main():
             ldap.print_asreqroast()
             log_title('Result of "goldenticket" command', 3)
             ldap.print_lastpwchangekrbtgt()
+
+        elif action == "test":
+            log_title('Result of "test" command', 3)
+            ldap.test_new_search()
+
         else:
             log_error('Error: This functionnality is not implemented yet. Please implement it now.')
 
