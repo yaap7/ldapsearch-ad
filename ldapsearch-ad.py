@@ -13,7 +13,7 @@ import codecs
 def print_version():
     # version number is just the date of the release.
     # with format: YYYY.MM.DD
-    version_number = '2022.07.29'
+    version_number = '2022.08.17'
     print(f'ldapsearch-ad v{version_number}')
 
 
