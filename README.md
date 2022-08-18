@@ -1,6 +1,9 @@
 # ldapsearch-ad.py
 
 ![Python version](https://img.shields.io/badge/python-v3.6+-informational)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code linter: flake8](https://img.shields.io/badge/Code%20linter-flake8-blue)](https://github.com/PyCQA/flake8)
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
 ![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
 
@@ -48,12 +51,13 @@ More examples can be found in [USAGE.md](USAGE.md).
 
 ## TODO
 
-* [ ] verify all the `-t` options are shown in [USAGE.md](USAGE.md) and explain most complicated options : kerberoast, search-spn, asreproast, goldenticket, search-delegation, createsid.
+* [ ] create a python package to help other projects to import the functions and use the main class.
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
-* [ ] implement ldap3 pagging functionality
 
 Done:
 
+* [x] implement ldap3 pagging functionality: available since [v2022.08.18](https://github.com/yaap7/ldapsearch-ad/releases/tag/v2022.08.18)
+* [x] verify all the `-t` options are shown in [USAGE.md](USAGE.md) and explain most complicated options : kerberoast, search-spn, asreproast, goldenticket, search-delegation, createsid.
 * [x] give useful `search` examples (see <https://phonexicum.github.io/infosec/windows.html> and <https://blog.xpnsec.com/kerberos-attacks-part-2/>)
 * [x] add a command to get vulnerable users to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
