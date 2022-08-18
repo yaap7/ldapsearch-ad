@@ -1,6 +1,9 @@
 # ldapsearch-ad.py
 
 ![Python version](https://img.shields.io/badge/python-v3.6+-informational)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code linter: flake8](https://img.shields.io/badge/Code%20linter-flake8-blue)](https://github.com/PyCQA/flake8)
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
 ![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
 
