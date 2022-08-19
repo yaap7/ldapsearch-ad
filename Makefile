@@ -15,4 +15,4 @@ uninstall:
 	pip uninstall -y ldapsearchad
 
 publish:
-	python3 setup.py register sdist upload
+	python3 setup.py check sdist upload

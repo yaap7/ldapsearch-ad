@@ -51,11 +51,15 @@ More examples can be found in [USAGE.md](USAGE.md).
 
 ## TODO
 
-* [ ] create a python package to help other projects to import the functions and use the main class.
+* [ ] switch from setup.py to pyproject.toml as described here: <https://realpython.com/pypi-publish-python-package/>
+* [ ] update the `Makefile` accordingly
+* [ ] update the `README.md` to explain the installation / portable usage.
+* [ ] look for new vulnerable configuration to add: <https://youtu.be/7_iv_eaAFyQ>
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 
 Done:
 
+* [x] create a python package to help other projects to import the functions and use the main class.
 * [x] implement ldap3 pagging functionality: available since [v2022.08.18](https://github.com/yaap7/ldapsearch-ad/releases/tag/v2022.08.18)
 * [x] verify all the `-t` options are shown in [USAGE.md](USAGE.md) and explain most complicated options : kerberoast, search-spn, asreproast, goldenticket, search-delegation, createsid.
 * [x] give useful `search` examples (see <https://phonexicum.github.io/infosec/windows.html> and <https://blog.xpnsec.com/kerberos-attacks-part-2/>)

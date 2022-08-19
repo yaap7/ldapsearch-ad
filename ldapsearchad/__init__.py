@@ -3,8 +3,8 @@ from .ldapsearchad import LdapsearchAd
 
 
 # version number is just the date of the release.
-# with format: YYYY.MM.DD
-VERSION = "2022.08.17"
+# with format: YYYY.MM.DD with zero so setuptools is happy
+VERSION = "2022.8.18"
 
 
 def version():

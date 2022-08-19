@@ -7,6 +7,7 @@ from sys import exit
 from sys import stdout
 
 from ldapsearchad import LdapsearchAd
+from ldapsearchad import version as ldapsearchad_version
 
 from ldapsearchad.logging import log_title
 from ldapsearchad.logging import log_error
@@ -93,7 +94,7 @@ def main():
     args = arg_parser.parse_args()
 
     if args.ask_for_version:
-        print(LdapsearchAd.version())
+        print(f"ldapsearchad v{ldapsearchad_version()}")
         exit(0)
 
     # if the version is not asked, we should have at least a target and an action
