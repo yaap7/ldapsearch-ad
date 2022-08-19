@@ -742,7 +742,9 @@ class LdapsearchAd:
 
     def print_admins(self, size_limit=100):
         """Method to get a list of members of the "admin" group."""
-        search_filter = "(|(CN=Administrators)(CN=Administrateurs)(CN=Admins du domaine)(CN=Domain Admins)(CN=Enterprise Admins)(CN=Administrateurs de l’entreprise))"
+        english_groups = "(CN=Administrators)(CN=Domain Admins)(CN=Enterprise Admins)"
+        french_groups = "(CN=Administrateurs)(CN=Admins du domaine)(CN=Administrateurs de l’entreprise)"
+        search_filter = f"(|{english_groups}{french_groups})"
         # Get the exact distinguishedName of the "admin" group
         # needed to perform a recursive search of members of members of members ...
         admin_groups = self.search(
