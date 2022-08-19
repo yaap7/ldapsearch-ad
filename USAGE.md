@@ -121,7 +121,7 @@ Show the **admins** (members of *domain admins*, *enterprise admins*, *administr
 Usefull to find juicy targets.
 
 ``` text
-$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t admins     
+$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t admins
 ### Result of "admins" command ###
 [+] All members of group "Administrateurs":
 [*]     admbilly (DONT_EXPIRE_PASSWORD)
@@ -137,7 +137,7 @@ $ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -
 Show the user accounts vunerable to **kerberoast** attacks.
 
 ``` text
-$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t kerberoast     
+$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t kerberoast
 ### Result of "kerberoast" command ###
 [*] admDupond : MSSQLSvc/srv-db-01.evilcorp.lab2:18739, MSSQLSvc/srv-db-01.evilcorp.lab2:65239
 [*] admDurand : HTTP/192.168.56.212, HTTP/srv-web-01.evilcorp.lab2, HTTP/srv-web-01
@@ -154,7 +154,7 @@ Show the user accounts vunerable to **asreproast** attacks.
 I cannot create the proper documentation for the moment.
 
 ``` text
-$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t asreproast     
+$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t asreproast
 ### Result of "asreproast" command ###
 TO BE COMPLETED
 ```
@@ -211,7 +211,7 @@ I need to fully understand what it looks for before making this documentation.
 Retrieve all interesting information with a simple user account using `-t all`.
 
 ``` text
-$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t all 
+$ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -t all
 ### Server infos ###
 [+] Forest functionality level = Windows 2012 R2
 [+] Domain functionality level = Windows 2012 R2
