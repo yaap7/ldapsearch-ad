@@ -146,6 +146,11 @@ class LdapsearchAd:
             raise LsaException(
                 "Need to be authenticated before trying to search for something."
             )
+        if isinstance(size_limit, str):
+            try:
+                size_limit = int(size_limit)
+            except ValueError:
+                raise LsaException("size_limit (-z) should be a valid integer")
         nb_entries = 0
         base_dn = self.server.info.other.get("defaultNamingContext")[0]
         self.connection.search(
