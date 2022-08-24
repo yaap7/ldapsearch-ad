@@ -108,6 +108,7 @@ def main():
     mandatory_arguments["search"] = ["domain", "username", "search_filter"]
     mandatory_arguments["show-user"] = ["domain", "username", "search_filter"]
     mandatory_arguments["show-user-list"] = ["domain", "username", "search_filter"]
+    mandatory_arguments["member-of"] = ["domain", "username", "search_filter"]
     mandatory_arguments["trusts"] = ["domain", "username"]
     mandatory_arguments["pass-pols"] = ["domain", "username"]
     mandatory_arguments["admins"] = ["domain", "username"]
@@ -215,6 +216,13 @@ def main():
             ldap.print_users_list(
                 args.search_filter, args.search_attributes, args.size_limit
             )
+
+        # Get users list of member of the specified group
+        # search_filter should only contain the groupe name
+        # then it is converted to a correct ldap filter
+        elif action == "member-of":
+            log_title('Result of "member-of" command', 3)
+            ldap.print_member_of(args.search_filter, args.size_limit)
 
         # Get trusts
         elif action == "trusts":

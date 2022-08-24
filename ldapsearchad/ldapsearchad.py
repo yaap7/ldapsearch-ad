@@ -279,6 +279,32 @@ class LdapsearchAd:
         for user in r_search:
             self.__print_user_brief(user)
 
+    def print_member_of(self, group_cn, size_limit=100):
+        """Print the list of users who a member of a specific group
+        Also use the nested groups"""
+        search_filter = f"(CN={group_cn})"
+        # Get the exact distinguishedName of the requested group
+        # needed to perform a recursive search of members of members of members ...
+        targeted_groups = self.search(
+            search_filter, ["distinguishedName", "cn"], size_limit=10
+        )
+        # should be only one...
+        for targeted_group in targeted_groups:
+            group_dn = targeted_group["distinguishedName"]
+            log_info(f'All members of group "{targeted_group["cn"]}":')
+            # from this distinguishedName, find all members recursively
+            search_filter = f"(&(memberOf:1.2.840.113556.1.4.1941:={group_dn})(!(objectClass=group)))"
+            attributes = [
+                "objectClass",
+                "name",
+                "userAccountControl",
+                "sAMAccountName",
+                "sAMAccountType",
+            ]
+            users = self.search(search_filter, attributes, size_limit=size_limit)
+            for user in users:
+                self.__print_user_brief(user, "    ")
+
     def print_trusts(self):
         """Method to get infos about trusts."""
         for trust in self.search("(objectClass=trustedDomain)"):
