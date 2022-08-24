@@ -14,5 +14,15 @@ install-dev:
 uninstall:
 	pip uninstall -y ldapsearchad
 
-publish:
-	python3 setup.py check sdist upload
+clean:
+	rm -r dist/
+
+build: clean
+	python -m build
+	twine check dist/*
+
+publish-test: build
+	twine upload -r testpypi dist/*
+
+publish: build
+	twine upload dist/*
