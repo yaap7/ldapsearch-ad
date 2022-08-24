@@ -316,6 +316,25 @@ $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t sh
 [+] |___memberOf = Domain Admins
 ```
 
+### -t member-of
+
+List the users member of a specified group.
+
+**Exception** the search filter argument have to be the groupe CN, instead of a valid LDAP filter as usual.
+
+``` text
+$ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t member-of -s 'grp-bad-admins' -z 2000
+### Result of "member-of" command ###
+[+] All members of group "grp-bad-admins":
+[+]     wwilly
+[+]     jjohnny
+[+]     jjacky
+[+]     jdupond
+[…]
+```
+
+Note: it is also possible to look for multiple groups by using wildcard (e.g. `-s 'grp-admin*'`), but it is limited to the first 100 groups for the moment.
+
 ## Authenticate with an NTLM hash instead of a password
 
 Because sometimes the compromise is still on-going.

@@ -291,7 +291,7 @@ class LdapsearchAd:
         # Get the exact distinguishedName of the requested group
         # needed to perform a recursive search of members of members of members ...
         targeted_groups = self.search(
-            search_filter, ["distinguishedName", "cn"], size_limit=10
+            search_filter, ["distinguishedName", "cn"], size_limit=100
         )
         # should be only one...
         for targeted_group in targeted_groups:
