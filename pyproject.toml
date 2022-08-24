@@ -1,0 +1,52 @@
+# pyproject.toml
+
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ldapsearchad"
+version = "2022.8.24"
+description = "ldapsearch tool to find vulnerable configuration in Active Directory"
+readme = "README.md"
+authors = [{ name = "yaap", email = "gracieux.guillaume@gmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "Environment :: Console",
+    "Operating System :: POSIX",
+    "Intended Audience :: System Administrators",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["ldapsearch", "Active Directory", "pentest"]
+dependencies = [
+    "ldap3",
+    "pycryptodome",
+]
+requires-python = ">=3.6"
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "pre-commit",
+    "bumpver",
+]
+
+[project.urls]
+Homepage = "https://github.com/yaap7/ldapsearch-ad"
+Documentation = "https://github.com/yaap7/ldapsearch-ad/blob/master/USAGE.md"
+Repository = "https://github.com/yaap7/ldapsearch-ad"
+Changelog = "https://github.com/yaap7/ldapsearch-ad/releases"
+
+[tool.bumpver]
+current_version = "2022.8.24"
+version_pattern = "YYYY.MM.DD"
+commit_message  = "Bump version {old_version} -> {new_version}"
+commit          = true
+tag             = true
+push            = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"ldapsearchad/__init__.py" = ['VERSION = "{version}"']
