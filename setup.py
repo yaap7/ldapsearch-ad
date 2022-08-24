@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="ldapsearchad",
-    version="2022.8.18",
+    version="2022.8.24",
     description="ldapsearch tool to find vulnerable configuration in Active Directory",
     url="https://github.com/yaap7/ldapsearch-ad",
     author="yaap7",
