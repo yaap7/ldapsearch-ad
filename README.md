@@ -55,14 +55,13 @@ More examples can be found in [USAGE.md](USAGE.md).
 
 ## TODO
 
-* [ ] switch from setup.py to pyproject.toml as described here: <https://realpython.com/pypi-publish-python-package/>
-* [ ] update the `Makefile` accordingly
-* [ ] update the `README.md` to explain the installation / portable usage.
+* [ ] Adapt the package so it could be used independently (in CLI or as a package to import)
 * [ ] look for new vulnerable configuration to add: <https://youtu.be/7_iv_eaAFyQ>
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 
 Done:
 
+* [x] publish *ldapsearchad* as a package on [PyPI](https://pypi.org/project/ldapsearchad/).
 * [x] create a python package to help other projects to import the functions and use the main class.
 * [x] implement ldap3 pagging functionality: available since [v2022.08.18](https://github.com/yaap7/ldapsearch-ad/releases/tag/v2022.08.18)
 * [x] verify all the `-t` options are shown in [USAGE.md](USAGE.md) and explain most complicated options : kerberoast, search-spn, asreproast, goldenticket, search-delegation, createsid.
