@@ -15,7 +15,7 @@ uninstall:
 	pip uninstall -y ldapsearchad
 
 clean:
-	rm -r dist/
+	rm -fr dist/ ldapsearchad.egg-info/
 
 build: clean
 	python -m build
