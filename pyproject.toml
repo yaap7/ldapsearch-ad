@@ -12,11 +12,14 @@ readme = "README.md"
 authors = [{ name = "yaap", email = "gracieux.guillaume@gmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Environment :: Console",
     "Operating System :: POSIX",
     "Intended Audience :: System Administrators",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Topic :: Security",
+    "Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP",
 ]
 keywords = ["ldapsearch", "Active Directory", "pentest"]
 dependencies = [

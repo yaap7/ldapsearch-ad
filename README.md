@@ -7,6 +7,10 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
 ![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
 
+![PyPI version](https://img.shields.io/pypi/v/ldapsearchad)
+![PyPI format](https://img.shields.io/pypi/format/ldapsearchad)
+![PyPI license](https://img.shields.io/pypi/l/ldapsearchad)
+
 Python3 script to quickly get various information from a domain controller through its LDAP service.
 
 I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/) are processing.
