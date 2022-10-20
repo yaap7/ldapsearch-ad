@@ -88,3 +88,8 @@ This tool is only an humble attempt to implement their technics using python3 to
 Unfortunately, I heard the ldap interface could be removed from domain controllers in the future :(
 
 Thanks to [Bengui](https://youtu.be/xKG9v0UfuH0?t=228) for the username convention.
+
+## Similar projects
+
+* <https://github.com/Processus-Thief/HEKATOMB>
+* <https://github.com/skelsec>
