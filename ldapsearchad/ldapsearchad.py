@@ -372,11 +372,10 @@ class LdapsearchAd:
     def __print_pass_pol(self, pass_pol):
         """Print info about a Fine-Grained Password Policy."""
         log_info(f'Fined grained password policy found: {c_cyan(pass_pol["cn"])}')
-        attributes = pass_pol.entry_attributes_as_dict
         log_info(
-            f'|____Password settings precedence = {attributes["msDS-PasswordSettingsPrecedence"][0]}'
+            f'|___Password settings precedence = {pass_pol["msDS-PasswordSettingsPrecedence"]}'
         )
-        pass_len = attributes["msDS-MinimumPasswordLength"][0]
+        pass_len = pass_pol["msDS-MinimumPasswordLength"]
         # Password length
         if pass_len < 8:
             log_info(f"|___Minimum password length = {c_red(pass_len)}")
@@ -385,36 +384,46 @@ class LdapsearchAd:
         else:
             log_info(f"|___Minimum password length = {c_green(pass_len)}")
         # Password complexity
-        if attributes["msDS-PasswordComplexityEnabled"][0]:
-            log_info(
-                f'|___Password complexity enabled = {c_green(attributes["msDS-PasswordComplexityEnabled"][0])}'
-            )
+        if pass_pol["msDS-PasswordComplexityEnabled"]:
+            log_info(f'|___Password complexity enabled = {c_green("Enabled")}')
         else:
-            log_info(
-                f'|___Password complexity enabled = {c_red(attributes["msDS-PasswordComplexityEnabled"][0])}'
-            )
+            log_info(f'|___Password complexity enabled = {c_red("Disabled")}')
         # Password reversible encryption?
-        if attributes["msDS-PasswordReversibleEncryptionEnabled"][0]:
+        if pass_pol["msDS-PasswordReversibleEncryptionEnabled"]:
             log_info(
-                f'|___Password reversible encryption enabled = {c_white_on_red(attributes["msDS-PasswordReversibleEncryptionEnabled"][0])}'
+                f'|___Password reversible encryption enabled = {c_white_on_red(pass_pol["msDS-PasswordReversibleEncryptionEnabled"])}'
             )
         else:
             log_info(
-                f'|___Password reversible encryption enabled = {attributes["msDS-PasswordReversibleEncryptionEnabled"][0]}'
+                f'|___Password reversible encryption enabled = {pass_pol["msDS-PasswordReversibleEncryptionEnabled"]}'
             )
         # Lockout settings
-        if attributes["msDS-LockoutThreshold"][0] == 0:
+        if pass_pol["msDS-LockoutThreshold"] == 0:
             log_success(f'|___Lockout threshold = {c_white_on_red("Disabled")}')
         else:
+            log_info(f'|___Lockout threshold = {pass_pol["msDS-LockoutThreshold"]}')
             log_info(
-                f'|___Lockout threshold = {attributes["msDS-LockoutThreshold"][0]}'
+                f'|___  Lockout duration = {str_human_date(pass_pol["msDS-LockoutDuration"])}'
             )
             log_info(
-                f'|___  Lockout duration = {str_human_date(attributes["msDS-LockoutDuration"][0])}'
+                f'|___  Lockout observation window = {str_human_date(pass_pol["msDS-LockoutObservationWindow"])}'
             )
+        # Password history length
+        if pass_pol["msDS-PasswordHistoryLength"] > 0:
+            log_success(
+                f'|___Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
+            )
+        else:
             log_info(
-                f'|___  Lockout observation window = {str_human_date(attributes["msDS-LockoutObservationWindow"][0])}'
+                f'|___Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
             )
+        # Password min and max age
+        log_info(
+            f'|___Max password age = {str_human_date(pass_pol["msDS-MaximumPasswordAge"])}'
+        )
+        log_info(
+            f'|___Min password age = {str_human_date(pass_pol["msDS-MinimumPasswordAge"])}'
+        )
 
     def print_pass_pols(self):
         """Main function to get info about password policies."""
