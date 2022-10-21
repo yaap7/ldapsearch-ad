@@ -231,29 +231,29 @@ class LdapsearchAd:
     def __print_user_details(self, user, tab=""):
         """Print info of a user (samacountname and userAccountControl)."""
         log_info(f'{tab}{user["samAccountName"]}')
-        log_info(f"{tab}|___type: {str_object_type(user)}")
+        log_info(f"{tab}|__ type: {str_object_type(user)}")
         if "displayName" in user:
-            log_info(f'{tab}|___displayName = {user["displayName"]}')
+            log_info(f'{tab}|__ displayName = {user["displayName"]}')
         if "description" in user:
-            log_info(f'{tab}|___description = {user["description"]}')
+            log_info(f'{tab}|__ description = {user["description"]}')
         if "adminCount" in user:
             if user["admincount"] == 1:
-                log_success(f'{tab}|___{c_red("The adminCount is set to 1")}')
+                log_success(f'{tab}|__ {c_red("The adminCount is set to 1")}')
             elif user["admincount"] == 0:
-                log_info(f'{tab}|___{"adminCount = 0"}')
+                log_info(f'{tab}|__ {"adminCount = 0"}')
             else:
                 log_error(
-                    f'{tab}|___Unknown value for adminCount: {user["admincount"]}'
+                    f'{tab}|__ Unknown value for adminCount: {user["admincount"]}'
                 )
         if "userAccountControl" in user:
             log_info(
-                f'{tab}|___userAccountControl = {", ".join(list_uac_colored_flags(user["userAccountControl"]))}'
+                f'{tab}|__ userAccountControl = {", ".join(list_uac_colored_flags(user["userAccountControl"]))}'
             )
         log_info(
-            f'{tab}|___sAMAccountType = {str_samaccounttype(user["samaccounttype"])}'
+            f'{tab}|__ sAMAccountType = {str_samaccounttype(user["samaccounttype"])}'
         )
         if "memberOf" in user:
-            log_info(f'{tab}|___memberOf = {", ".join(self.__list_groups(user))}')
+            log_info(f'{tab}|__ memberOf = {", ".join(self.__list_groups(user))}')
 
     def __print_user_brief(self, user, tab=""):
         """Print info of a user on a single line (samacountname and userAccountControl)."""
@@ -315,19 +315,19 @@ class LdapsearchAd:
         for trust in self.search("(objectClass=trustedDomain)"):
             log_info(f'+ {trust["name"]} ({trust["flatName"]})')
             log_info(
-                f'|___trustAttributes = {list_trust_attributes(trust["trustAttributes"])}'
+                f'|__ trustAttributes = {list_trust_attributes(trust["trustAttributes"])}'
             )
             log_info(
-                f'|___trustDirection = {list_trust_direction(trust["trustDirection"])}'
+                f'|__ trustDirection = {list_trust_direction(trust["trustDirection"])}'
             )
-            log_info(f'|___trustType = {list_trust_type(trust["trustType"])}')
-            log_info(f'|___trustPartner = {trust["trustPartner"]}')
+            log_info(f'|__ trustType = {list_trust_type(trust["trustType"])}')
+            log_info(f'|__ trustPartner = {trust["trustPartner"]}')
             if "securityIdentifier" in trust:
                 log_info(
-                    f'|___securityIdentifier = {ldap3.protocol.formatters.formatters.format_sid(trust["securityIdentifier"])}'
+                    f'|__ securityIdentifier = {ldap3.protocol.formatters.formatters.format_sid(trust["securityIdentifier"])}'
                 )
-            log_info(f'|___whenCreated = {trust["whenCreated"]}')
-            log_info(f'|___whenChanged = {trust["whenChanged"]}')
+            log_info(f'|__ whenCreated = {trust["whenCreated"]}')
+            log_info(f'|__ whenChanged = {trust["whenChanged"]}')
 
     def __print_default_pass_pol(self, pass_pol):
         """Print info about the default password policy."""
@@ -335,95 +335,96 @@ class LdapsearchAd:
         min_pass_len = pass_pol["minPwdLength"]
         # Password length
         if min_pass_len < 8:
-            log_info(f"|___Minimum password length = {c_red(min_pass_len)}")
+            log_info(f"|__ Minimum password length = {c_red(min_pass_len)}")
         elif min_pass_len < 12:
-            log_info(f"|___Minimum password length = {c_orange(min_pass_len)}")
+            log_info(f"|__ Minimum password length = {c_orange(min_pass_len)}")
         else:
-            log_info(f"|___Minimum password length = {c_green(min_pass_len)}")
+            log_info(f"|__ Minimum password length = {c_green(min_pass_len)}")
         # Password properties as described here: https://ldapwiki.com/wiki/PwdProperties
         pass_properties = pass_pol["pwdProperties"]
         if pass_properties & 1 > 0:
-            log_info(f'|___Password complexity = {c_green("Enabled")}')
+            log_info(f'|__ Password complexity = {c_green("Enabled")}')
         else:
-            log_info(f'|___Password complexity = {c_red("Disabled")}')
+            log_info(f'|__ Password complexity = {c_red("Disabled")}')
         # Lockout settings
         if pass_pol["lockoutThreshold"] == 0:
-            log_success(f'|___Lockout threshold = {c_white_on_red("Disabled")}')
+            log_success(f'|__ Lockout threshold = {c_white_on_red("Disabled")}')
         else:
             if pass_pol["lockoutThreshold"] > 5:
-                log_success(f'|___Lockout threshold = {pass_pol["lockoutThreshold"]}')
+                log_success(f'|__ Lockout threshold = {pass_pol["lockoutThreshold"]}')
             else:
-                log_info(f'|___Lockout threshold = {pass_pol["lockoutThreshold"]}')
+                log_info(f'|__ Lockout threshold = {pass_pol["lockoutThreshold"]}')
             log_info(
-                f'|___  Lockout duration = {str_human_date(pass_pol["lockoutDuration"])}'
+                f'|__ Lockout duration = {str_human_date(pass_pol["lockoutDuration"])}'
             )
             log_info(
-                f'|___  Lockout observation window = {str_human_date(pass_pol["lockOutObservationWindow"])}'
+                f'|__ Lockout observation window = {str_human_date(pass_pol["lockOutObservationWindow"])}'
             )
         # Password history length
         if pass_pol["pwdHistoryLength"] > 0:
-            log_success(f'|___Password history length = {pass_pol["pwdHistoryLength"]}')
+            log_success(f'|__ Password history length = {pass_pol["pwdHistoryLength"]}')
         else:
-            log_info(f'|___Password history length = {pass_pol["pwdHistoryLength"]}')
+            log_info(f'|__ Password history length = {pass_pol["pwdHistoryLength"]}')
         # Password min and max age
-        log_info(f'|___Max password age = {str_human_date(pass_pol["maxPwdAge"])}')
-        log_info(f'|___Min password age = {str_human_date(pass_pol["minPwdAge"])}')
+        log_info(f'|__ Max password age = {str_human_date(pass_pol["maxPwdAge"])}')
+        log_info(f'|__ Min password age = {str_human_date(pass_pol["minPwdAge"])}')
 
     def __print_pass_pol(self, pass_pol):
         """Print info about a Fine-Grained Password Policy."""
         log_info(f'Fined grained password policy found: {c_cyan(pass_pol["cn"])}')
         log_info(
-            f'|___Password settings precedence = {pass_pol["msDS-PasswordSettingsPrecedence"]}'
+            f'|__ Password settings precedence = {pass_pol["msDS-PasswordSettingsPrecedence"]}'
         )
         pass_len = pass_pol["msDS-MinimumPasswordLength"]
         # Password length
         if pass_len < 8:
-            log_info(f"|___Minimum password length = {c_red(pass_len)}")
+            log_info(f"|__ Minimum password length = {c_red(pass_len)}")
         elif pass_len < 12:
-            log_info(f"|___Minimum password length = {c_orange(pass_len)}")
+            log_info(f"|__ Minimum password length = {c_orange(pass_len)}")
         else:
-            log_info(f"|___Minimum password length = {c_green(pass_len)}")
+            log_info(f"|__ Minimum password length = {c_green(pass_len)}")
         # Password complexity
         if pass_pol["msDS-PasswordComplexityEnabled"]:
-            log_info(f'|___Password complexity enabled = {c_green("Enabled")}')
+            log_info(f'|__ Password complexity enabled = {c_green("Enabled")}')
         else:
-            log_info(f'|___Password complexity enabled = {c_red("Disabled")}')
+            log_info(f'|__ Password complexity enabled = {c_red("Disabled")}')
         # Password reversible encryption?
         if pass_pol["msDS-PasswordReversibleEncryptionEnabled"]:
             log_info(
-                f'|___Password reversible encryption enabled = {c_white_on_red(pass_pol["msDS-PasswordReversibleEncryptionEnabled"])}'
+                f'|__ Password reversible encryption enabled = {c_white_on_red(pass_pol["msDS-PasswordReversibleEncryptionEnabled"])}'
             )
         else:
             log_info(
-                f'|___Password reversible encryption enabled = {pass_pol["msDS-PasswordReversibleEncryptionEnabled"]}'
+                f'|__ Password reversible encryption enabled = {pass_pol["msDS-PasswordReversibleEncryptionEnabled"]}'
             )
         # Lockout settings
         if pass_pol["msDS-LockoutThreshold"] == 0:
-            log_success(f'|___Lockout threshold = {c_white_on_red("Disabled")}')
+            log_success(f'|__ Lockout threshold = {c_white_on_red("Disabled")}')
         else:
-            log_info(f'|___Lockout threshold = {pass_pol["msDS-LockoutThreshold"]}')
+            log_info(f'|__ Lockout threshold = {pass_pol["msDS-LockoutThreshold"]}')
             log_info(
-                f'|___  Lockout duration = {str_human_date(pass_pol["msDS-LockoutDuration"])}'
+                f'|__ Lockout duration = {str_human_date(pass_pol["msDS-LockoutDuration"])}'
             )
             log_info(
-                f'|___  Lockout observation window = {str_human_date(pass_pol["msDS-LockoutObservationWindow"])}'
+                f'|__ Lockout observation window = {str_human_date(pass_pol["msDS-LockoutObservationWindow"])}'
             )
         # Password history length
         if pass_pol["msDS-PasswordHistoryLength"] > 0:
             log_success(
-                f'|___Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
+                f'|__ Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
             )
         else:
             log_info(
-                f'|___Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
+                f'|__ Password history length = {pass_pol["msDS-PasswordHistoryLength"]}'
             )
         # Password min and max age
         log_info(
-            f'|___Max password age = {str_human_date(pass_pol["msDS-MaximumPasswordAge"])}'
+            f'|__ Max password age = {str_human_date(pass_pol["msDS-MaximumPasswordAge"])}'
         )
         log_info(
-            f'|___Min password age = {str_human_date(pass_pol["msDS-MinimumPasswordAge"])}'
+            f'|__ Min password age = {str_human_date(pass_pol["msDS-MinimumPasswordAge"])}'
         )
+        log_info(f'|__ PSO applies to = {pass_pol["msDS-PSOAppliesTo"]}')
 
     def print_pass_pols(self):
         """Main function to get info about password policies."""

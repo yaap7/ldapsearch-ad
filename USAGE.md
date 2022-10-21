@@ -78,21 +78,21 @@ Usefull to get a full view of the Active Directory overall architecture.
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t trusts
 ### Result of "trusts" command ###
 [+] + fra.evilcorp.lab2 (FRA)
-[+] |___trustAttributes = ['TRUST_ATTRIBUTE_WITHIN_FOREST']
-[+] |___trustDirection = Bidirectional
-[+] |___trustType = The trusted domain is a Windows domain running Active Directory.
-[+] |___trustPartner = fra.evilcorp.lab2
-[+] |___securityIdentifier = S-1-5-21-2894840767-735700-3593130334
-[+] |___whenCreated = 2019-03-09 04:57:15+00:00
-[+] |___whenChanged = 2019-03-09 04:57:15+00:00
+[+] |__ trustAttributes = ['TRUST_ATTRIBUTE_WITHIN_FOREST']
+[+] |__ trustDirection = Bidirectional
+[+] |__ trustType = The trusted domain is a Windows domain running Active Directory.
+[+] |__ trustPartner = fra.evilcorp.lab2
+[+] |__ securityIdentifier = S-1-5-21-2894840767-735700-3593130334
+[+] |__ whenCreated = 2019-03-09 04:57:15+00:00
+[+] |__ whenChanged = 2019-03-09 04:57:15+00:00
 [+] + total.lab2 (TOTAL)
-[+] |___trustAttributes = []
-[+] |___trustDirection = Outbound
-[+] |___trustType = The trusted domain is a Windows domain running Active Directory.
-[+] |___trustPartner = total.lab2
-[+] |___securityIdentifier = S-1-5-21-2894840767-735700-3503349313
-[+] |___whenCreated = 2018-11-05 11:51:18+00:00
-[+] |___whenChanged = 2022-02-11 20:23:40+00:00
+[+] |__ trustAttributes = []
+[+] |__ trustDirection = Outbound
+[+] |__ trustType = The trusted domain is a Windows domain running Active Directory.
+[+] |__ trustPartner = total.lab2
+[+] |__ securityIdentifier = S-1-5-21-2894840767-735700-3503349313
+[+] |__ whenCreated = 2018-11-05 11:51:18+00:00
+[+] |__ whenChanged = 2022-02-11 20:23:40+00:00
 ```
 
 ### -t pass-pols
@@ -104,14 +104,14 @@ Usefull to prepare our next password spraying attack ;)
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t pass-pols
 ### Result of "pass-pols" command ###
 [+] Default password policy:
-[+] |___Minimum password length = 10
-[+] |___Password complexity = Enabled
-[*] |___Lockout threshold = 12
-[+] |___  Lockout duration = 30 minutes, 0 seconds
-[+] |___  Lockout observation window = 30 minutes, 0 seconds
-[*] |___Password history length = 8
-[+] |___Max password age = 120 days, 0 hours, 0 minutes, 0 seconds
-[+] |___Min password age = 0 seconds
+[+] |__ Minimum password length = 10
+[+] |__ Password complexity = Enabled
+[*] |__ Lockout threshold = 12
+[+] |__   Lockout duration = 30 minutes, 0 seconds
+[+] |__   Lockout observation window = 30 minutes, 0 seconds
+[*] |__ Password history length = 8
+[+] |__ Max password age = 120 days, 0 hours, 0 minutes, 0 seconds
+[+] |__ Min password age = 0 seconds
 [+] No fine grained password policy found (high privileges are required).
 ```
 
@@ -222,31 +222,31 @@ $ ./ldapsearch-ad.py -l 192.168.56.2 -d evilcorp.lab2 -u jjohnny -p 'P@$$word' -
 [+] naming_contexts = ['DC=evilcorp,DC=lab2', 'CN=Configuration,DC=evilcorp,DC=lab2', 'CN=Schema,CN=Configuration,DC=evilcorp,DC=lab2', 'DC=DomainDnsZones,DC=evilcorp,DC=lab2', 'DC=ForestDnsZones,DC=evilcorp,DC=lab2']
 ### Result of "trusts" command ###
 [+] + fra.evilcorp.lab2 (FRA)
-[+] |___trustAttributes = ['TRUST_ATTRIBUTE_WITHIN_FOREST']
-[+] |___trustDirection = Bidirectional
-[+] |___trustType = The trusted domain is a Windows domain running Active Directory.
-[+] |___trustPartner = fra.evilcorp.lab2
-[+] |___securityIdentifier = S-1-5-21-2894840767-735700-3593130334
-[+] |___whenCreated = 2019-03-09 04:57:15+00:00
-[+] |___whenChanged = 2019-03-09 04:57:15+00:00
+[+] |__ trustAttributes = ['TRUST_ATTRIBUTE_WITHIN_FOREST']
+[+] |__ trustDirection = Bidirectional
+[+] |__ trustType = The trusted domain is a Windows domain running Active Directory.
+[+] |__ trustPartner = fra.evilcorp.lab2
+[+] |__ securityIdentifier = S-1-5-21-2894840767-735700-3593130334
+[+] |__ whenCreated = 2019-03-09 04:57:15+00:00
+[+] |__ whenChanged = 2019-03-09 04:57:15+00:00
 [+] + total.lab2 (TOTAL)
-[+] |___trustAttributes = []
-[+] |___trustDirection = Outbound
-[+] |___trustType = The trusted domain is a Windows domain running Active Directory.
-[+] |___trustPartner = total.lab2
-[+] |___securityIdentifier = S-1-5-21-2894840767-735700-3503349313
-[+] |___whenCreated = 2018-11-05 11:51:18+00:00
-[+] |___whenChanged = 2022-02-11 20:23:40+00:00
+[+] |__ trustAttributes = []
+[+] |__ trustDirection = Outbound
+[+] |__ trustType = The trusted domain is a Windows domain running Active Directory.
+[+] |__ trustPartner = total.lab2
+[+] |__ securityIdentifier = S-1-5-21-2894840767-735700-3503349313
+[+] |__ whenCreated = 2018-11-05 11:51:18+00:00
+[+] |__ whenChanged = 2022-02-11 20:23:40+00:00
 ### Result of "pass-pols" command ###
 [+] Default password policy:
-[+] |___Minimum password length = 10
-[+] |___Password complexity = Enabled
-[*] |___Lockout threshold = 12
-[+] |___  Lockout duration = 30 minutes, 0 seconds
-[+] |___  Lockout observation window = 30 minutes, 0 seconds
-[*] |___Password history length = 8
-[+] |___Max password age = 120 days, 0 hours, 0 minutes, 0 seconds
-[+] |___Min password age = 0 seconds
+[+] |__ Minimum password length = 10
+[+] |__ Password complexity = Enabled
+[*] |__ Lockout threshold = 12
+[+] |__   Lockout duration = 30 minutes, 0 seconds
+[+] |__   Lockout observation window = 30 minutes, 0 seconds
+[*] |__ Password history length = 8
+[+] |__ Max password age = 120 days, 0 hours, 0 minutes, 0 seconds
+[+] |__ Min password age = 0 seconds
 [+] No fine grained password policy found (high privileges are required).
 ### Result of "admins" command ###
 [+] All members of group "Administrateurs":
@@ -273,20 +273,20 @@ Usefull to get more information about a juicy target.
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-user -s '(samaccountname=adm*)'
 ### Result of "show-user" command ###
 [+] admbilly
-[+] |___type: user
-[+] |___description = ['First admin']
-[*] |___The adminCount is set to 1
-[+] |___userAccountControl = ACCOUNTDISABLE, NORMAL_ACCOUNT
-[+] |___sAMAccountType = SAM_USER_OBJECT
-[+] |___memberOf = grp-gods, grp-passwords-never-expire
+[+] |__ type: user
+[+] |__ description = ['First admin']
+[*] |__ The adminCount is set to 1
+[+] |__ userAccountControl = ACCOUNTDISABLE, NORMAL_ACCOUNT
+[+] |__ sAMAccountType = SAM_USER_OBJECT
+[+] |__ memberOf = grp-gods, grp-passwords-never-expire
 [+] admwilly
-[+] |___type: user
-[+] |___displayName = admwilly
-[+] |___description = ['Second admin']
-[*] |___The adminCount is set to 1
-[+] |___userAccountControl = NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD
-[+] |___sAMAccountType = SAM_USER_OBJECT
-[+] |___memberOf = grp-gods, grp-vmware-admins
+[+] |__ type: user
+[+] |__ displayName = admwilly
+[+] |__ description = ['Second admin']
+[*] |__ The adminCount is set to 1
+[+] |__ userAccountControl = NORMAL_ACCOUNT, DONT_EXPIRE_PASSWORD
+[+] |__ sAMAccountType = SAM_USER_OBJECT
+[+] |__ memberOf = grp-gods, grp-vmware-admins
 ```
 
 or even computers or groups. Everything depend of the search parameter `-s`.
@@ -295,25 +295,25 @@ or even computers or groups. Everything depend of the search parameter `-s`.
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-user -s '(samaccountname=srv-ad*)'
 ### Result of "show-user" command ###
 [+] srv-ad-01$
-[+] |___type: computer
-[+] |___description = ['First DC']
-[+] |___userAccountControl = SERVER_TRUST_ACCOUNT, TRUSTED_FOR_DELEGATION
-[+] |___sAMAccountType = SAM_MACHINE_ACCOUNT
+[+] |__ type: computer
+[+] |__ description = ['First DC']
+[+] |__ userAccountControl = SERVER_TRUST_ACCOUNT, TRUSTED_FOR_DELEGATION
+[+] |__ sAMAccountType = SAM_MACHINE_ACCOUNT
 [+] srv-ad-02$
-[+] |___type: computer
-[+] |___displayName = SVP1-AD01273-1$
-[+] |___description = ['First RODC']
-[+] |___userAccountControl = WORKSTATION_TRUST_ACCOUNT, TRUSTED_TO_AUTH_FOR_DELEGATION, PARTIAL_SECRETS_ACCOUNT
-[+] |___sAMAccountType = SAM_MACHINE_ACCOUNT
-[+] |___memberOf = grp-rodc
+[+] |__ type: computer
+[+] |__ displayName = SVP1-AD01273-1$
+[+] |__ description = ['First RODC']
+[+] |__ userAccountControl = WORKSTATION_TRUST_ACCOUNT, TRUSTED_TO_AUTH_FOR_DELEGATION, PARTIAL_SECRETS_ACCOUNT
+[+] |__ sAMAccountType = SAM_MACHINE_ACCOUNT
+[+] |__ memberOf = grp-rodc
 
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t show-user -s '(cn=bad admins)'
 ### Result of "show-user" command ###
 [+] bad_admins
-[+] |___type: group
-[+] |___description = ['Bad Admins']
-[+] |___sAMAccountType = SAM_GROUP_OBJECT
-[+] |___memberOf = Domain Admins
+[+] |__ type: group
+[+] |__ description = ['Bad Admins']
+[+] |__ sAMAccountType = SAM_GROUP_OBJECT
+[+] |__ memberOf = Domain Admins
 ```
 
 ### -t member-of
@@ -362,10 +362,10 @@ It is possible to set the attributes to retrive at the end of the command line t
 ``` text
 $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t search -s '(samaccountname=bbilly)' cn samaccountname useraccountcontrol memberof displayname samaccounttype
 ### Result of "search" command ###
-[+] |___cn = bbilly
-[+] |___displayName = BILLY Billy
-[+] |___memberOf = ['CN=grp-gods,OU=Admins,DC=evilcorp,DC=lab2', 'CN=grp-another-example,OU=Groups,DC=evilcorp,DC=lab2']
-[+] |___sAMAccountName = bbilly
-[+] |___sAMAccountType = SAM_USER_OBJECT
-[+] |___userAccountControl = NORMAL_ACCOUNT
+[+] |__ cn = bbilly
+[+] |__ displayName = BILLY Billy
+[+] |__ memberOf = ['CN=grp-gods,OU=Admins,DC=evilcorp,DC=lab2', 'CN=grp-another-example,OU=Groups,DC=evilcorp,DC=lab2']
+[+] |__ sAMAccountName = bbilly
+[+] |__ sAMAccountType = SAM_USER_OBJECT
+[+] |__ userAccountControl = NORMAL_ACCOUNT
 ```
