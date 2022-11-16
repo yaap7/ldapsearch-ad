@@ -25,4 +25,4 @@ publish-test: build
 	twine upload -r testpypi dist/*
 
 publish: build
-	twine upload dist/*
+	twine upload --skip-existing dist/*
