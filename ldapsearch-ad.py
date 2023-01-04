@@ -194,14 +194,14 @@ def main():
                 for attribute in attributes:
                     if attribute == "userAccountControl":
                         log_info(
-                            f"|___{attribute} = {', '.join(list_uac_flags(entry[attribute]))}"
+                            f"|__ {attribute} = {', '.join(list_uac_flags(entry[attribute]))}"
                         )
                     elif attribute == "sAMAccountType":
                         log_info(
-                            f"|___{attribute} = {str_samaccounttype(entry[attribute])}"
+                            f"|__ {attribute} = {str_samaccounttype(entry[attribute])}"
                         )
                     else:
-                        log_info(f"|___{attribute} = {entry[attribute]}")
+                        log_info(f"|__ {attribute} = {entry[attribute]}")
 
         # Get users
         elif action == "show-user":

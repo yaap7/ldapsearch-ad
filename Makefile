@@ -15,7 +15,7 @@ uninstall:
 	pip uninstall -y ldapsearchad
 
 clean:
-	rm -r dist/
+	rm -fr dist/ ldapsearchad.egg-info/
 
 build: clean
 	python -m build
@@ -25,4 +25,4 @@ publish-test: build
 	twine upload -r testpypi dist/*
 
 publish: build
-	twine upload dist/*
+	twine upload --skip-existing dist/*

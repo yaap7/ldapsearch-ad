@@ -7,6 +7,10 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/yaap7/ldapsearch-ad?style=social)
 ![GitHub Repo forks](https://img.shields.io/github/forks/yaap7/ldapsearch-ad?style=social)
 
+![PyPI version](https://img.shields.io/pypi/v/ldapsearchad)
+![PyPI format](https://img.shields.io/pypi/format/ldapsearchad)
+![PyPI license](https://img.shields.io/pypi/l/ldapsearchad)
+
 Python3 script to quickly get various information from a domain controller through its LDAP service.
 
 I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](https://github.com/BloodHoundAD/BloodHound) and [PingCastle](https://www.pingcastle.com/) are processing.
@@ -51,14 +55,13 @@ More examples can be found in [USAGE.md](USAGE.md).
 
 ## TODO
 
-* [ ] switch from setup.py to pyproject.toml as described here: <https://realpython.com/pypi-publish-python-package/>
-* [ ] update the `Makefile` accordingly
-* [ ] update the `README.md` to explain the installation / portable usage.
+* [ ] Adapt the package so it could be used independently (in CLI or as a package to import)
 * [ ] look for new vulnerable configuration to add: <https://youtu.be/7_iv_eaAFyQ>
 * [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 
 Done:
 
+* [x] publish *ldapsearchad* as a package on [PyPI](https://pypi.org/project/ldapsearchad/).
 * [x] create a python package to help other projects to import the functions and use the main class.
 * [x] implement ldap3 pagging functionality: available since [v2022.08.18](https://github.com/yaap7/ldapsearch-ad/releases/tag/v2022.08.18)
 * [x] verify all the `-t` options are shown in [USAGE.md](USAGE.md) and explain most complicated options : kerberoast, search-spn, asreproast, goldenticket, search-delegation, createsid.
@@ -85,3 +88,8 @@ This tool is only an humble attempt to implement their technics using python3 to
 Unfortunately, I heard the ldap interface could be removed from domain controllers in the future :(
 
 Thanks to [Bengui](https://youtu.be/xKG9v0UfuH0?t=228) for the username convention.
+
+## Similar projects
+
+* <https://github.com/Processus-Thief/HEKATOMB>
+* <https://github.com/skelsec>
