@@ -344,7 +344,7 @@ Requesting the global catalog (port 3268) to get the list of external principals
 $ ./ldapsearch-ad.py -l 192.168.56.20:3268 -d evilcorp -u jjohnny -p 'P@$$word' -t search -s '(objectClass=foreignSecurityPrincipal)'
 ### Result of "search" command ###
 [+] |___cn = S-1-5-4
-[+] |___distinguishedName = CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=evilcorp,DC=>
+[+] |___distinguishedName = CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=evilcorp>
 [+] |___name = S-1-5-4
 [+] |___objectCategory = CN=Foreign-Security-Principal,CN=Schema,CN=Configuration,DC=evilcorp>
 [+] |___objectClass = ['top', 'foreignSecurityPrincipal']
