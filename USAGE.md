@@ -336,7 +336,7 @@ $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t me
 Note: it is also possible to look for multiple groups by using wildcard (e.g. `-s 'grp-admin*'`), but it is limited to the first 100 groups for the moment.
 
 
-### search for ForeignSecurityPrincipals
+### Search for Foreign Security Principals members
 
 List Security Principals (Users, Computers and groups) in external or forest trusts that are members of domain local scope groups in the current forest by requesting the global catalog on port 3268.
 
