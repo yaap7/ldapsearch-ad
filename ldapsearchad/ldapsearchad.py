@@ -29,6 +29,7 @@ from .utils import convert_sid_to_string
 class LdapsearchAd:
 
     hostname = None
+    port = None
     domain = None
     username = None
     password = None
@@ -40,6 +41,8 @@ class LdapsearchAd:
     def __init__(
         self,
         hostname,
+        #default ldaps port if not specified
+        port=636,
         ssl=False,
         domain=None,
         username=None,
@@ -47,6 +50,7 @@ class LdapsearchAd:
         hashes=None,
     ):
         self.hostname = hostname
+        self.port = port
         self.domain = domain
         self.username = username
         self.password = password
@@ -55,7 +59,7 @@ class LdapsearchAd:
             self.lmhash, self.nthash = self.hashes.split(":")
 
         try:
-            self.server = ldap3.Server(self.hostname, use_ssl=ssl, get_info="ALL")
+            self.server = ldap3.Server(self.hostname, self.port, use_ssl=ssl, get_info="ALL")
             if self.domain and self.username:
                 if self.password:
                     self.connection = ldap3.Connection(
@@ -309,6 +313,19 @@ class LdapsearchAd:
             users = self.search(search_filter, attributes, size_limit=size_limit)
             for user in users:
                 self.__print_user_brief(user, "    ")
+
+    def print_seach_foreign_security_principals(self, size_limit=100):
+        """Print the list of foreign security principals who are members 
+        domain local groups in the current forest"""
+        search_filter = f"(objectClass=foreignSecurityPrincipal)"
+        attributes = [
+            "name",
+            "objectSid",
+            "distinguishedName"
+        ]
+        fsp = self.search(search_filter, attributes, size_limit=size_limit)
+        for sp in fsp:
+            self.__print_user_brief(sp, "    ")
 
     def print_trusts(self):
         """Method to get infos about trusts."""
