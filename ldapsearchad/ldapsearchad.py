@@ -314,18 +314,22 @@ class LdapsearchAd:
             for user in users:
                 self.__print_user_brief(user, "    ")
 
-    def print_seach_foreign_security_principals(self, size_limit=100):
+    def print_search_foreign_security_principals(self, size_limit=100):
         """Print the list of foreign security principals who are members 
         domain local groups in the current forest"""
-        search_filter = f"(objectClass=foreignSecurityPrincipal)"
+        search_filter = f"(objectclass=foreignSecurityPrincipal)"
         attributes = [
             "name",
             "objectSid",
-            "distinguishedName"
+            "distinguishedName",
+            "objectClass"
         ]
         fsp = self.search(search_filter, attributes, size_limit=size_limit)
         for sp in fsp:
-            self.__print_user_brief(sp, "    ")
+            log_info(f'name = {sp["name"]}')
+            log_info(f'|__ objectSid = {sp["objectSid"]}')
+            log_info(f'|__ distinguishedName = {sp["distinguishedName"]}')
+            log_info(f'|__objectClass = {sp["objectClass"]}')
 
     def print_trusts(self):
         """Method to get infos about trusts."""

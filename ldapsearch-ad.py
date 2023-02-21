@@ -24,7 +24,7 @@ def main():
         "-l", "--server", dest="ldap_server", help="IP address of the LDAP server."
     )
     arg_parser.add_argument(
-        "-n", "--port", dest="server_port_number", help="Port number to request (389 (LDAP), 636 (LDAP over SSL), 3268 (GC), 3269 (GC over SSL))."
+        "-n", "--port", dest="server_port_number", type=int, help="Port number to request (389 (LDAP), 636 (LDAP over SSL), 3268 (GC), 3269 (GC over SSL))."
     )
     arg_parser.add_argument(
         "-ssl",
@@ -39,7 +39,7 @@ def main():
         dest="request_type",
         help="Request type: info, whoami, search, trusts,\
         pass-pols, admins, show-user, show-user-list, kerberoast, search-spn, asreproast, goldenticket,\
-        search-delegation, createsid, seach-foreign-security-principals, all",
+        search-delegation, createsid, search-foreign-security-principals, all",
     )
     arg_parser.add_argument(
         "-d",
@@ -121,7 +121,7 @@ def main():
     mandatory_arguments["goldenticket"] = ["domain", "username"]
     mandatory_arguments["search-delegation"] = ["domain", "username"]
     mandatory_arguments["createsid"] = ["domain", "username"]
-    mandatory_arguments["seach-foreign-security-principals"] = ["domain", "username"]
+    mandatory_arguments["search-foreign-security-principals"] = ["domain", "username"]
     mandatory_arguments["all"] = ["domain", "username"]
     actions = [i.strip() for i in args.request_type.split(",")]
     for action in actions:
@@ -230,9 +230,9 @@ def main():
             ldap.print_member_of(args.search_filter, args.size_limit)
 
         # Get list of Foreign Security Principals added to domain local groups from external/forest trusts 
-        elif action == "seach-foreign-security-principals":
-            log_title('Result of "seach-foreign-security-principals" command', 3)
-            ldap.print_seach_foreign_security_principals(args.size_limit)
+        elif action == "search-foreign-security-principals":
+            log_title('Result of "search-foreign-security-principals" command', 3)
+            ldap.print_search_foreign_security_principals(args.size_limit)
 
         # Get trusts
         elif action == "trusts":
