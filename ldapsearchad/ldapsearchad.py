@@ -329,7 +329,7 @@ class LdapsearchAd:
             log_info(f'name = {sp["name"]}')
             log_info(f'|__ objectSid = {sp["objectSid"]}')
             log_info(f'|__ distinguishedName = {sp["distinguishedName"]}')
-            log_info(f'|__objectClass = {sp["objectClass"]}')
+            log_info(f'|__ objectClass = {sp["objectClass"]}')
 
     def print_trusts(self):
         """Method to get infos about trusts."""
