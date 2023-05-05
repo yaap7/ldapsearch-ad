@@ -53,6 +53,36 @@ def str_functionality_level(num):
         return f"Not known, update this script. (value = {num})"
 
 
+def is_flag_in_uac(flag, uac):
+    """Return a list of property flags as described at:
+    https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro"""
+    flags = {
+        "SCRIPT": 0x1,
+        "ACCOUNTDISABLE": 0x2,
+        "HOMEDIR_REQUIRED": 0x8,
+        "LOCKOUT": 0x10,
+        "PASSWD_NOTREQD": 0x20,
+        "PASSWD_CANT_CHANGE": 0x40,
+        "ENCRYPTED_TEXT_PWD_ALLOWED": 0x80,
+        "TEMP_DUPLICATE_ACCOUNT": 0x100,
+        "NORMAL_ACCOUNT": 0x200,
+        "INTERDOMAIN_TRUST_ACCOUNT": 0x800,
+        "WORKSTATION_TRUST_ACCOUNT": 0x1000,
+        "SERVER_TRUST_ACCOUNT": 0x2000,
+        "DONT_EXPIRE_PASSWORD": 0x10000,
+        "MNS_LOGON_ACCOUNT": 0x20000,
+        "SMARTCARD_REQUIRED": 0x40000,
+        "TRUSTED_FOR_DELEGATION": 0x80000,
+        "NOT_DELEGATED": 0x100000,
+        "USE_DES_KEY_ONLY": 0x200000,
+        "DONT_REQ_PREAUTH": 0x400000,
+        "PASSWORD_EXPIRED": 0x800000,
+        "TRUSTED_TO_AUTH_FOR_DELEGATION": 0x1000000,
+        "PARTIAL_SECRETS_ACCOUNT": 0x04000000,
+    }
+    return uac & flags[flag] > 0
+
+
 def list_uac_flags(uac):
     """Return a list of property flags as described at:
     https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro"""
@@ -193,6 +223,8 @@ def str_object_type(entry):
             return "domain"
         elif sat == 0x10000000:
             return "group"
+        elif sat == 0x20000000:
+            return "alias"
         elif sat == 0x30000000:
             return "user"
         elif sat == 0x30000001:
