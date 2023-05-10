@@ -34,7 +34,7 @@ def main():
         "-t",
         "--type",
         dest="request_type",
-        help="Request type: info, whoami, search, trusts,\
+        help="Request type: info, whoami, search, csv, trusts,\
         pass-pols, admins, show-user, show-user-list, kerberoast, search-spn, asreproast, goldenticket,\
         search-delegation, createsid, all",
     )
@@ -106,9 +106,16 @@ def main():
     mandatory_arguments["info"] = []
     mandatory_arguments["whoami"] = ["domain", "username"]
     mandatory_arguments["search"] = ["domain", "username", "search_filter"]
+    mandatory_arguments["csv"] = [
+        "domain",
+        "username",
+        "search_filter",
+        "search_attributes",
+    ]
     mandatory_arguments["show-user"] = ["domain", "username", "search_filter"]
     mandatory_arguments["show-user-list"] = ["domain", "username", "search_filter"]
     mandatory_arguments["member-of"] = ["domain", "username", "search_filter"]
+    mandatory_arguments["user-of"] = ["domain", "username", "search_filter"]
     mandatory_arguments["trusts"] = ["domain", "username"]
     mandatory_arguments["pass-pols"] = ["domain", "username"]
     mandatory_arguments["admins"] = ["domain", "username"]
@@ -203,6 +210,28 @@ def main():
                     else:
                         log_info(f"|__ {attribute} = {entry[attribute]}")
 
+        # CSV export
+        elif action == "csv":
+            attributes = args.search_attributes
+            print(",".join(attributes))
+            entries = ldap.search(
+                args.search_filter, args.search_attributes, args.size_limit
+            )
+            for entry in entries:
+                values = []
+                for attribute in attributes:
+                    if attribute.lower() == "useraccountcontrol":
+                        value = f'"{",".join(list_uac_flags(entry[attribute]))}"'
+                    else:
+                        value = str(entry[attribute])
+                    values.append(value)
+                try:
+                    print(",".join(values))
+                except TypeError as e:
+                    print(f"type de values = {type(values)}")
+                    print(f"values = {values}")
+                    raise e
+
         # Get users
         elif action == "show-user":
             log_title('Result of "show-user" command', 3)
@@ -222,7 +251,17 @@ def main():
         # then it is converted to a correct ldap filter
         elif action == "member-of":
             log_title('Result of "member-of" command', 3)
-            ldap.print_member_of(args.search_filter, args.size_limit)
+            if "(" in args.search_filter:
+                logging.error(
+                    'You must enter a group CN instead of a full search filter. (e.g. -s "Domain admins")'
+                )
+            else:
+                ldap.print_member_of(args.search_filter, args.size_limit)
+
+        # Get the list of groups whom the user is member of
+        elif action == "user-of":
+            log_title('Result of "user-of" command', 3)
+            ldap.print_user_of(args.search_filter, args.size_limit)
 
         # Get trusts
         elif action == "trusts":
