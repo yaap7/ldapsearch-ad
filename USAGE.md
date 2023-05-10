@@ -335,6 +335,21 @@ $ ./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u jjohnny -p 'P@$$word' -t me
 
 Note: it is also possible to look for multiple groups by using wildcard (e.g. `-s 'grp-admin*'`), but it is limited to the first 100 groups for the moment.
 
+
+### -t search-foreign-security-principals
+
+List Security Principals (Users, Computers and groups) in external or forest trusts that are members of domain local scope groups in the current forest by requesting the global catalog on port 3268.
+
+``` text
+$ ./ldapsearch-ad.py -l 192.168.56.20 -n 3268 -d evilcorp -u jjohnny -p 'P@$$word' -t search-foreign-security-principals
+### Result of "search-foreign-security-principals" command ###
+[+] name = S-1-5-4
+[+] |___objectSid = S-1-5-4
+[+] |___distinguishedName = CN=S-1-5-4,CN=ForeignSecurityPrincipals,DC=evilcorp>
+[+] |___objectClass = ['top', 'foreignSecurityPrincipal']}
+[…]
+```
+
 ## Authenticate with an NTLM hash instead of a password
 
 Because sometimes the compromise is still on-going.

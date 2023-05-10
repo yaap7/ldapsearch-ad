@@ -57,7 +57,6 @@ More examples can be found in [USAGE.md](USAGE.md).
 
 * [ ] Adapt the package so it could be used independently (in CLI or as a package to import)
 * [ ] look for new vulnerable configuration to add: <https://youtu.be/7_iv_eaAFyQ>
-* [ ] implement a search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 
 Done:
 
@@ -68,6 +67,7 @@ Done:
 * [x] give useful `search` examples (see <https://phonexicum.github.io/infosec/windows.html> and <https://blog.xpnsec.com/kerberos-attacks-part-2/>)
 * [x] add a command to get vulnerable users to AS-REP-roasting (thanks [@HadrienPerrineau](https://github.com/HadrienPerrineau))
 * [x] change the core architecture to create an object and do not open multiple connection for `-t all`
+* [x] search for ForeignSecurityPrincipals (When a user/group from an *external* domain/forest are added to a group in a domain, an object of type foreignSecurityPrincipal is created at `CN=<user_SID>,CN=ForeignSecurityPrincipals,DC=domain,DC=com`)
 
 ## Contributions
 
