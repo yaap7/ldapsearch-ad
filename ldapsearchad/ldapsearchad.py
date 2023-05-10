@@ -41,7 +41,7 @@ class LdapsearchAd:
     def __init__(
         self,
         hostname,
-        #default ldaps port if not specified
+        # default ldaps port if not specified
         port=636,
         ssl=False,
         domain=None,
@@ -59,7 +59,9 @@ class LdapsearchAd:
             self.lmhash, self.nthash = self.hashes.split(":")
 
         try:
-            self.server = ldap3.Server(self.hostname, self.port, use_ssl=ssl, get_info="ALL")
+            self.server = ldap3.Server(
+                self.hostname, self.port, use_ssl=ssl, get_info="ALL"
+            )
             if self.domain and self.username:
                 if self.password:
                     self.connection = ldap3.Connection(
@@ -264,10 +266,12 @@ class LdapsearchAd:
         if str_object_type(user) != "user":
             if "foreignSecurityPrincipal" in user["objectclass"]:
                 log_info(
-                    f'{tab}{user["name"]} (objectclass = foreignSecurityPrincipal, probably a user from another domain. Please investigate)'
+                    f'{tab}{user["sAMAccountName"]} (objectclass = foreignSecurityPrincipal, probably a user from another domain. Please investigate)'
                 )
             else:
-                log_warning(f'{tab}{user["name"]} ({c_orange(str_object_type(user))})')
+                log_warning(
+                    f'{tab}{user["sAMAccountName"]} ({c_orange(str_object_type(user))})'
+                )
         else:
             uac_flags = list_uac_colored_flags(user["userAccountControl"])
             uac_flags.remove("NORMAL_ACCOUNT")
@@ -275,6 +279,20 @@ class LdapsearchAd:
                 log_success(f'{tab}{user["sAMAccountName"]} ({", ".join(uac_flags)})')
             else:
                 log_info(f'{tab}{user["sAMAccountName"]}')
+
+    def __print_group_brief(self, group, tab=""):
+        """Print info of a group on a single line (samacountname and description)."""
+        if type(group["description"]) == list:
+            description = " - ".join(group["description"])
+        else:
+            description = str(group["description"])
+        if "member" in group:
+            nb_members = len(group["member"])
+        else:
+            nb_members = 0
+        log_info(
+            f'{tab}{group["sAMAccountName"]}§{str_object_type(group)}§{description}§{nb_members}'
+        )
 
     def print_users(self, search_filter, attributes="*", size_limit=100):
         """Method to pretty print a set a users attributes."""
@@ -289,7 +307,7 @@ class LdapsearchAd:
             self.__print_user_brief(user)
 
     def print_member_of(self, group_cn, size_limit=100):
-        """Print the list of users who a member of a specific group
+        """Print the list of users who a member of a specific group.
         Also use the nested groups"""
         search_filter = f"(CN={group_cn})"
         # Get the exact distinguishedName of the requested group
@@ -315,21 +333,42 @@ class LdapsearchAd:
                 self.__print_user_brief(user, "    ")
 
     def print_search_foreign_security_principals(self, size_limit=100):
-        """Print the list of foreign security principals who are members 
+        """Print the list of foreign security principals who are members of
         domain local groups in the current forest"""
-        search_filter = f"(objectclass=foreignSecurityPrincipal)"
-        attributes = [
-            "name",
-            "objectSid",
-            "distinguishedName",
-            "objectClass"
-        ]
+        search_filter = "(objectclass=foreignSecurityPrincipal)"
+        attributes = ["name", "objectSid", "distinguishedName", "objectClass"]
         fsp = self.search(search_filter, attributes, size_limit=size_limit)
         for sp in fsp:
             log_info(f'name = {sp["name"]}')
             log_info(f'|__ objectSid = {sp["objectSid"]}')
             log_info(f'|__ distinguishedName = {sp["distinguishedName"]}')
             log_info(f'|__ objectClass = {sp["objectClass"]}')
+
+    def print_user_of(self, search_filter, size_limit=100):
+        """Print the list of groups whom a user is member of.
+        Also use the nested groups"""
+        # Get the exact distinguishedName of the requested user
+        # needed to perform a recursive search of his groups ...
+        targeted_users = self.search(
+            search_filter, ["distinguishedName", "cn"], size_limit=100
+        )
+        # should be only one...
+        for targeted_user in targeted_users:
+            user_dn = targeted_user["distinguishedName"]
+            log_info(f'All groups of user "{targeted_user["cn"]}":')
+            # from this distinguishedName, find all members recursively
+            search_filter = f"(member:1.2.840.113556.1.4.1941:={user_dn})"
+            attributes = [
+                "objectClass",
+                "description",
+                "cn",
+                "member",
+                "sAMAccountName",
+                "sAMAccountType",
+            ]
+            groups = self.search(search_filter, attributes, size_limit=size_limit)
+            for group in groups:
+                self.__print_group_brief(group, "    ")
 
     def print_trusts(self):
         """Method to get infos about trusts."""
@@ -507,6 +546,13 @@ class LdapsearchAd:
         search_attributes = ["cn", "samaccountname", "serviceprincipalname"]
         for kerberoastable_user in self.search(search_filter, search_attributes):
             self.__print_user_with_spn(kerberoastable_user)
+
+    def get_kerberoast(self):
+        """Method to get infos about kerberoastable users.
+        Log its sAMAccountName and servicePrincipalName"""
+        search_filter = "(&(objectClass=user)(servicePrincipalName=*)(!(objectClass=computer))(!(cn=krbtgt))(!(userAccountControl:1.2.840.113556.1.4.803:=2)))"
+        search_attributes = ["cn", "samaccountname", "serviceprincipalname"]
+        return self.search(search_filter, search_attributes)
 
     def print_asreqroast(self):
         """Method to get all accounts that are vulnerable to ASREPRoast.
