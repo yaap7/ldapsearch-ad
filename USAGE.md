@@ -349,6 +349,11 @@ $ ./ldapsearch-ad.py -l 192.168.56.20 -n 3268 -d evilcorp -u jjohnny -p 'P@$$wor
 [+] |___objectClass = ['top', 'foreignSecurityPrincipal']}
 […]
 ```
+## Authenticate with credentials in a file instead of in the commandline
+```bash
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u username.txt -p username.txt -t info
+./ldapsearch-ad.py -l 192.168.56.20 -d evilcorp -u username.txt -H hash.txt -t info
+```
 
 ## Authenticate with an NTLM hash instead of a password
 
