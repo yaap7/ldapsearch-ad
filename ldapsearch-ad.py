@@ -6,6 +6,8 @@ import logging
 from sys import exit
 from sys import stdout
 
+from os import path as os_path
+
 from ldapsearchad import LdapsearchAd
 from ldapsearchad import version as ldapsearchad_version
 
@@ -166,15 +168,23 @@ def main():
         logger.addHandler(f_handler)
     logger.addHandler(handler)
 
+    # Read username, password, and hashes from file if it exists
+    def read_from_file_if_exists(arg):
+        if arg is not None and os_path.isfile(arg):
+            with open(arg) as fin:
+                return fin.readline().rstrip()
+        else:
+            return arg
+
     # Connection to the LDAP server using credentials provided in argument
     ldap = LdapsearchAd(
         args.ldap_server,
         args.server_port_number,
         args.ssl,
         args.domain,
-        args.username,
-        args.password,
-        args.hashes,
+        read_from_file_if_exists(args.username),
+        read_from_file_if_exists(args.password),
+        read_from_file_if_exists(args.hashes),
     )
 
     for action in actions:
