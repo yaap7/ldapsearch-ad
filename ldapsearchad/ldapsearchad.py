@@ -282,7 +282,7 @@ class LdapsearchAd:
 
     def __print_group_brief(self, group, tab=""):
         """Print info of a group on a single line (samacountname and description)."""
-        if type(group["description"]) == list:
+        if isinstance(group["description"], list):
             description = " - ".join(group["description"])
         else:
             description = str(group["description"])
