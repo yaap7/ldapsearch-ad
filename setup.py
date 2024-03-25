@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name='ldapsearch-ad',
-	version='2024.03.25',
+	version='2022.8.24',
 	packages=find_packages(),
 	scripts=['ldapsearch-ad.py'],
 	install_requires=[
