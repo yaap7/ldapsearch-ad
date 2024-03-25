@@ -23,6 +23,12 @@ I'm used to launch it as soon as I get valid AD credentials, while [BloodHound](
 
 ## Installation
 
+With `pipx`:
+
+```bash
+pipx install git+https://github.com/yaap7/ldapsearch-ad
+```
+
 Simply get the source code and install the requirements:
 
 ``` bash
