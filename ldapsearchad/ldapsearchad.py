@@ -282,7 +282,7 @@ class LdapsearchAd:
 
     def __print_group_brief(self, group, tab=""):
         """Print info of a group on a single line (samacountname and description)."""
-        if type(group["description"]) == list:
+        if isinstance(group["description"], list):
             description = " - ".join(group["description"])
         else:
             description = str(group["description"])
@@ -575,11 +575,11 @@ class LdapsearchAd:
     def print_lastpwchangekrbtgt(self):
         """Method to retreive the last time the password for krbtgt was reset."""
         search_filter = "(cn=krbtgt)"
-        search_attributes = ["whenChanged"]
+        search_attributes = ["pwdLastSet"]
         for krbtgt in self.search(search_filter, search_attributes):
-            # when_changed = krbtgt['whenChanged'].replace(microsecond=0).isoformat()
+            # when_changed = krbtgt['pwdLastSet'].replace(microsecond=0).isoformat()
             # this one is similar but easier to read
-            when_changed = krbtgt["whenChanged"].strftime("%Y-%m-%d %H:%M:%S")
+            when_changed = krbtgt["pwdLastSet"].strftime("%Y-%m-%d %H:%M:%S")
             log_info(f"krbtgt password changed at {when_changed}")
 
     def print_search_delegation(self):
