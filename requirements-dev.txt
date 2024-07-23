@@ -1,2 +1,4 @@
-pre-commit
 bumpver
+build
+pre-commit
+twine
