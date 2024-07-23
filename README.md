@@ -86,6 +86,9 @@ I would even make you a [collaborator](https://docs.github.com/en/account-and-pr
 * [CSbyGB](https://github.com/CSbyGB) for typos corrections
 * [Like0x](https://github.com/Like0x) from [P1-Team](https://github.com/P1-Team) for the connection using NTLM hash instead of password, and the `createsid` feature.
 * [nsilver7](https://github.com/nsilver7) for the option to append the output in a file in addition to the standard output.
+* [d34dl0ckk](https://github.com/d34dl0ckk) for adding the `-n` option to request data from the Global Catalog, and the `-t search-foreign-security-principals` feature.
+* [Adamkadaban](https://github.com/Adamkadaban) for improving the OpSec of the tool by getting sensitive information (login, password, hash) from files instead in the CLI directly, and by adding `setup.py` to allow easy installation through `pipx`! 🎊
+* [DrorDvash](https://github.com/DrorDvash) for reporting a bug in `-t goldenticket`.
 
 ## Credits
 

@@ -1,1 +1,4 @@
+bumpver
+build
 pre-commit
+twine
