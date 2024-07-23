@@ -36,7 +36,7 @@ class LdapsearchAd:
     server = None
     connection = None
 
-    last_errors = []
+    last_errors: list = []
 
     def __init__(
         self,
@@ -60,7 +60,9 @@ class LdapsearchAd:
                 self.lmhash, self.nthash = self.hashes.split(":")
             except ValueError as ve:
                 print("Error: The hash need to be in the following format:")
-                print("aad3b435b51404eeaad3b435b51404ee:382c7bf814461d8d685cf7a7a06c8c8f")
+                print(
+                    "aad3b435b51404eeaad3b435b51404ee:382c7bf814461d8d685cf7a7a06c8c8f"
+                )
                 print("")
                 raise ve
         try:
@@ -542,7 +544,7 @@ class LdapsearchAd:
 
     def __print_user_with_spn(self, user):
         spns = ", ".join(user["servicePrincipalName"])
-        log_success(f"{user['sAMAccountName']} : {spns}")
+        log_success(f"{user['sAMAccountName']}: {spns}")
 
     def print_kerberoast(self):
         """Method to get infos about kerberoastable users.

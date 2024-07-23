@@ -34,7 +34,7 @@ def str_human_date(date):
 
 def str_functionality_level(num):
     """Return the functionality level as described at:
-    https://msdn.microsoft.com/en-us/library/cc223274.aspx
+    <https://msdn.microsoft.com/en-us/library/cc223274.aspx>
     Note: it is the same for forest, domain, and domain controller."""
     n = int(num)
     func_levels = [
@@ -55,7 +55,8 @@ def str_functionality_level(num):
 
 def is_flag_in_uac(flag, uac):
     """Return a list of property flags as described at:
-    https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro"""
+    <https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro>
+    """
     flags = {
         "SCRIPT": 0x1,
         "ACCOUNTDISABLE": 0x2,
@@ -85,7 +86,8 @@ def is_flag_in_uac(flag, uac):
 
 def list_uac_flags(uac):
     """Return a list of property flags as described at:
-    https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro"""
+    <https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro>
+    """
     flags = []
     if uac & 0x1 > 0:
         flags.append("SCRIPT")
@@ -136,7 +138,8 @@ def list_uac_flags(uac):
 
 def list_uac_colored_flags(uac):
     """Return a list of property flags as described at:
-    https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro"""
+    <https://support.microsoft.com/en-gb/help/305144/how-to-use-the-useraccountcontrol-flags-to-manipulate-user-account-pro>
+    """
     flags = []
     if uac & 0x1 > 0:
         flags.append("SCRIPT")
@@ -187,7 +190,7 @@ def list_uac_colored_flags(uac):
 
 def str_samaccounttype(sat):
     """Return the SAM-Account-Type as described at:
-    https://docs.microsoft.com/en-us/windows/desktop/adschema/a-samaccounttype"""
+    <https://docs.microsoft.com/en-us/windows/desktop/adschema/a-samaccounttype>"""
     if sat == 0x0:
         return "SAM_DOMAIN_OBJECT"
     elif sat == 0x10000000:
@@ -236,7 +239,7 @@ def str_object_type(entry):
 
 
 def list_trust_type(trust_type):
-    """Return the trust type as defined here: https://msdn.microsoft.com/en-us/library/cc223771.aspx"""
+    """Return the trust type as defined here: <https://msdn.microsoft.com/en-us/library/cc223771.aspx>"""
     if trust_type == 1:
         return "The trusted domain is a Windows domain not running Active Directory."
     elif trust_type == 2:
@@ -250,7 +253,7 @@ def list_trust_type(trust_type):
 
 
 def list_trust_direction(trust_direction):
-    """Return the trust direction as defined here: https://msdn.microsoft.com/en-us/library/cc223768.aspx"""
+    """Return the trust direction as defined here: <https://msdn.microsoft.com/en-us/library/cc223768.aspx>"""
     if trust_direction == 0:
         return "Disabled"
     elif trust_direction == 1:
@@ -264,7 +267,7 @@ def list_trust_direction(trust_direction):
 
 
 def list_trust_attributes(ta):
-    """Return the trust attribute flags as defined here: https://msdn.microsoft.com/en-us/library/cc223779.aspx"""
+    """Return the trust attribute flags as defined here: <https://msdn.microsoft.com/en-us/library/cc223779.aspx>"""
     flags = []
     if ta & 0x1 > 0:
         flags.append("TRUST_ATTRIBUTE_NON_TRANSITIVE")
