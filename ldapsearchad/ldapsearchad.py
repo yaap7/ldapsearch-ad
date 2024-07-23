@@ -56,8 +56,13 @@ class LdapsearchAd:
         self.password = password
         self.hashes = hashes
         if self.hashes is not None:
-            self.lmhash, self.nthash = self.hashes.split(":")
-
+            try:
+                self.lmhash, self.nthash = self.hashes.split(":")
+            except ValueError as ve:
+                print("Error: The hash need to be in the following format:")
+                print("aad3b435b51404eeaad3b435b51404ee:382c7bf814461d8d685cf7a7a06c8c8f")
+                print("")
+                raise ve
         try:
             self.server = ldap3.Server(
                 self.hostname, self.port, use_ssl=ssl, get_info="ALL"
